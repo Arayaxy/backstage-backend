@@ -1,6 +1,6 @@
 # Backend del proyecto de tripulaciones
 
-## Estructura
+## Estructura de archivos
 
 Se usa una estructura Model-View-Controller (MVC) para el proyecto como la del siguiente ejemplo:
 ```
@@ -16,8 +16,52 @@ proyecto/
 ├── routes/             # Definiciones de los endpoints
 │   ├── auth.route.js
 │   └── user.route.js
+├── validations/        # Validaciones de campos
+│   ├── auth.validation.js
+│   └── user.validation.js
 ├── app.js              # Punto de entrada principal
 └── package.json
+```
+
+## Estructura de respuesta
+
+// Éxito
+```
+{
+  "ok": true,
+  "data": { ... },  // datos en sí
+  "meta": { ... }   // datos adicionales como elementos totales, paginado
+}
+```
+
+// Error único
+```
+{
+  "ok": false,
+  "message": "Credenciales inválidas"
+}
+```
+
+// Varios errores (ejemplo validaciones de campos)
+```
+{
+  "ok": false,
+  "message": "Falló la validación",
+  "details": [
+    {
+      "path": "email",
+      "type": "field",
+      "title": "Atributo inválido",
+      "detail": "El correo debe tener..."
+    },
+    {
+      "path": "password",
+      "type": "field",
+      "title": "Atributo inválido",
+      "detail": "La contraseña debe tener..."
+    }
+  ]
+}
 ```
 
 ## Dependencias
