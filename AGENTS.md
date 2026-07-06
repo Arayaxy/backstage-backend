@@ -101,7 +101,10 @@ Todas las respuestas del backend deben seguir este formato:
 
 ### Usuario (Ponente)
 - Como usuario puedo loguearme en la página
-- Como usuario puedo tener acceso a toda la información de mi itinerario
+- Como usuario puedo ver mi **dashboard** con el listado de mis eventos asignados
+- Como usuario puedo acceder al detalle de cada evento individual desde el dashboard
+- Como usuario puedo ver la información completa de cada evento: estado, fechas, ubicación, documentación e itinerario (transporte, ponencia, hotel)
+- Como usuario puedo subir y modificar mi presentación desde el detalle del evento
 - Como usuario tengo que recibir notificaciones si se modifica cualquier apartado de mi horario o perfil
 - Como usuario me puedo poner en contacto con las organizadoras a través del chat
 
@@ -288,9 +291,10 @@ proyectoTripulacionesBackend/
 ### Endpoints planificados
 | Endpoint | Método | Middlewares | Controlador | Descripción |
 |---|---|---|---|---|
-| `/api/v1/events` | GET | authenticate | `event.getAll` | Listar eventos |
+| `/api/v1/events` | GET | authenticate | `event.getAll` | Listar eventos (todos si admin, filtrados si ponente) |
+| `/api/v1/events/mis-eventos` | GET | authenticate, authorize('ponente') | `event.getMisEventos` | Eventos asignados al ponente logueado |
 | `/api/v1/events` | POST | authenticate, authorize('admin'), validate | `event.create` | Crear evento |
-| `/api/v1/events/:id` | GET | authenticate | `event.getById` | Detalle de evento |
+| `/api/v1/events/:id` | GET | authenticate | `event.getById` | Detalle de evento (con itinerario del ponente si aplica) |
 | `/api/v1/events/:id` | PUT | authenticate, authorize('admin'), validate | `event.update` | Editar evento |
 | `/api/v1/events/:id` | DELETE | authenticate, authorize('admin') | `event.remove` | Eliminar evento |
 | `/api/v1/services` | GET | authenticate, authorize('admin') | `service.getAll` | Listar servicios |
@@ -303,7 +307,8 @@ proyectoTripulacionesBackend/
 | `/api/v1/ponentes/:id` | GET | authenticate | `ponente.getById` | Ver ponente |
 | `/api/v1/ponentes/:id` | PUT | authenticate, authorize('admin'), validate | `ponente.update` | Actualizar ponente |
 | `/api/v1/ponentes/:id` | DELETE | authenticate, authorize('admin') | `ponente.remove` | Eliminar ponente |
-| `/api/v1/ponentes/:id/presentacion` | POST | authenticate, upload | `ponente.uploadPresentacion` | Subir presentación (ponente) |
+| `/api/v1/ponentes/:id/presentacion` | POST | authenticate, upload | `ponente.uploadPresentacion` | Subir presentación (ponente, primera vez) |
+| `/api/v1/ponentes/:id/presentacion` | PUT | authenticate, upload | `ponente.updatePresentacion` | Modificar presentación (ponente) |
 | `/api/v1/clients` | GET | authenticate, authorize('admin') | `client.getAll` | Listar clientes |
 | `/api/v1/clients` | POST | authenticate, authorize('admin'), validate | `client.create` | Crear cliente |
 | `/api/v1/clients/:id` | PUT | authenticate, authorize('admin'), validate | `client.update` | Actualizar cliente |
@@ -312,11 +317,11 @@ proyectoTripulacionesBackend/
 | `/api/v1/users/:id/role` | PUT | authenticate, authorize('admin'), validate | `user.updateRole` | Asignar rol |
 | `/api/v1/chat` | POST | authenticate | `chat.send` | Enviar mensaje |
 | `/api/v1/chat/:id` | GET | authenticate | `chat.getByUser` | Obtener mensajes |
-| `/api/v1/notifications` | GET | authenticate | `notification.getByUser` | Obtener notificaciones |
+| `/api/v1/notifications` | GET | authenticate | `notification.getByUser` | Obtener notificaciones del ponente |
 
 ### Roles del sistema
 - `'admin'` - Acceso completo a gestión de eventos, servicios, ponentes, clientes, usuarios.
-- `'ponente'` - Acceso a su itinerario, presentaciones, chat, notificaciones.
+- `'ponente'` - Dashboard con sus eventos, detalle de cada evento, itinerario, presentaciones, chat, notificaciones.
 - `'visitante'` - Sin autenticación, solo login.
 
 ---

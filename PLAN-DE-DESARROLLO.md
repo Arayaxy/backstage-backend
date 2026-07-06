@@ -42,6 +42,14 @@ Para cada elemento del plan, aplicar el ciclo TDD definido en [AGENTS.md §4](./
   - **TDD:** Testear creación, listado filtrable, detalle, edición y eliminación.
   - **Código:** Crear `src/validations/event.validation.js`, `src/models/Event.js`, `src/controllers/event.controller.js`, `src/routes/event.route.js`.
 
+- [ ] **1.2. Endpoint /events/mis-eventos (Ponente Dashboard)**
+  - **TDD:** Testear que devuelve solo los eventos asignados al ponente logueado.
+  - **Código:** Endpoint `GET /api/v1/events/mis-eventos` con filtrado por id del ponente (desde `req.user`).
+
+- [ ] **1.3. Evento detalle con datos del ponente**
+  - **TDD:** Testear que al obtener detalle de un evento, si el usuario es ponente, se incluye su itinerario asociado.
+  - **Código:** Enriquecer `event.getById` para incluir datos del ponente (itinerario, presentación).
+
 ---
 
 ## FASE 2: GESTIÓN DE SERVICIOS (CONTACTO)
@@ -58,9 +66,9 @@ Para cada elemento del plan, aplicar el ciclo TDD definido en [AGENTS.md §4](./
   - **TDD:** Testear creación con itinerario completo, listado, detalle, edición y eliminación.
   - **Código:** Crear `src/validations/ponente.validation.js`, `src/models/Ponente.js`, `src/controllers/ponente.controller.js`, `src/routes/ponente.route.js`.
 
-- [ ] **3.2. Subida de presentación (ponente)**
-  - **TDD:** Testear que el ponente puede subir/modificar su presentación, que rechaza archivos no permitidos.
-  - **Código:** Endpoint `POST /api/v1/ponentes/:id/presentacion` con middleware `upload`.
+- [ ] **3.2. Subida y modificación de presentación (ponente)**
+  - **TDD:** Testear que el ponente puede subir (POST) y modificar (PUT) su presentación, que rechaza archivos no permitidos.
+  - **Código:** Endpoints `POST /api/v1/ponentes/:id/presentacion` y `PUT /api/v1/ponentes/:id/presentacion` con middleware `upload`.
 
 ---
 
