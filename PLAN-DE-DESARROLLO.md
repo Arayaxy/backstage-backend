@@ -1,100 +1,106 @@
 # PLAN DE DESARROLLO SECUENCIAL (TDD ESTRICTO): BACKEND ERP DE EVENTOS
 
-Este documento establece el orden e instrucciones de ejecución para la construcción del Backend del ERP de Eventos. El agente debe avanzar endpoint por endpoint y archivo por archivo, aplicando de forma obligatoria el flujo TDD (Test-Driven Development) antes de dar por completada cualquier tarea.
+Este documento establece el orden e instrucciones de ejecución para la construcción del Backend del ERP de Eventos, basado en las historias de usuario definidas en [AGENTS.md §3](./AGENTS.md#3-historias-de-usuario). El agente debe avanzar endpoint por endpoint y archivo por archivo, aplicando de forma obligatoria el flujo TDD antes de dar por completada cualquier tarea.
 
 ---
 
-## PROTOCOLO TDD OBLIGATORIO PARA EL AGENTE
+## PROTOCOLO TDD OBLIGATORIO
 
-Para cada elemento del plan, el agente debe proceder aplicando el ciclo TDD definido en [AGENTS.md §4](./AGENTS.md#4-ciclo-de-desarrollo-tdd-estricto).
+Para cada elemento del plan, aplicar el ciclo TDD definido en [AGENTS.md §4](./AGENTS.md#4-ciclo-de-desarrollo-tdd-estricto).
 
 ---
 
 ## FASE 0: INFRAESTRUCTURA BASE Y CONFIGURACIÓN
 
-- [ ] **0.1. Configuración de Vitest**
-  - Instalar vitest y supertest como dependencias de desarrollo (`pnpm add -D vitest supertest`).
+- [ ] **0.1. Configuración de Vitest + Supertest**
+  - Instalar vitest y supertest como dependencias de desarrollo (`npm install -D vitest supertest`).
   - Crear `vitest.config.js` con entorno node.
   - Añadir script `"test": "vitest run"` en `package.json`.
   - Crear test de ejemplo para el health endpoint.
 
-- [ ] **0.2. Variables de Entorno y Configuración**
-  - Actualizar `.env.example` con todas las variables necesarias (Firebase, Cloudinary, BD pendiente).
-  - Crear `.env` para desarrollo local.
-  - Asegurar que `src/config/env.js` valida las nuevas variables.
+- [ ] **0.2. Refactorizar auth.middleware.js**
+  - Migrar de `verifyAdmin` (JWT propio) a `authenticate` (Firebase Admin SDK).
+  - Implementar `authorize(...roles)`.
+  - **TDD:** Testear que authenticate rechaza peticiones sin token (401) y con token inválido (401). Testear que authorize restringe por rol (403).
 
-- [ ] **0.3. Configuración de Firebase Admin SDK**
-  - **TDD:** Testear que el middleware authenticate rechaza peticiones sin token (401) y con token inválido (401).
-  - **Código:** Crear `src/utils/firebase.js` con inicialización de Firebase Admin. Implementar `src/middlewares/auth.middleware.js` con `authenticate` y `authorize`.
+- [ ] **0.3. Refactorizar respuestas al formato unificado**
+  - Asegurar que todos los endpoints devuelvan `{ ok, data, meta }` / `{ ok, message, details }`.
 
-- [ ] **0.4. Configuración de Multer + Cloudinary**
-  - **TDD:** Testear que el middleware upload rechaza archivos de tipo no permitido y archivos que exceden el límite de tamaño.
-  - **Código:** Crear `src/utils/cloudinary.js` con configuración de Cloudinary. Crear `src/middlewares/upload.middleware.js` con Multer + subida a Cloudinary.
+- [ ] **0.4. Limpiar validationChains.js**
+  - Eliminar o archivar el archivo legacy con imports de Mikro-ORM.
 
-- [ ] **0.5. Configuración de Swagger / OpenAPI**
-  - Instalar swagger-ui-express y js-yaml.
-  - Crear archivo `openapi.yaml` con la definición base de la API.
+- [ ] **0.5. Configurar Multer + Cloudinary**
+  - Instalar multer y cloudinary (`npm install multer cloudinary`).
+  - Crear `src/utils/cloudinary.js`.
+  - Crear `src/middlewares/upload.middleware.js` (memoryStorage, 10MB, PDF/JPG/PNG/PPT/PPTX).
+
+---
+
+## FASE 1: GESTIÓN DE EVENTOS
+
+- [ ] **1.1. CRUD Eventos**
+  - **TDD:** Testear creación, listado filtrable, detalle, edición y eliminación.
+  - **Código:** Crear `src/validations/event.validation.js`, `src/models/Event.js`, `src/controllers/event.controller.js`, `src/routes/event.route.js`.
+
+---
+
+## FASE 2: GESTIÓN DE SERVICIOS (CONTACTO)
+
+- [ ] **2.1. CRUD Servicios**
+  - **TDD:** Testear creación, listado, detalle, edición y eliminación solo por admin.
+  - **Código:** Crear `src/validations/service.validation.js`, `src/models/Service.js`, `src/controllers/service.controller.js`, `src/routes/service.route.js`.
+
+---
+
+## FASE 3: GESTIÓN DE PONENTES
+
+- [ ] **3.1. CRUD Ponentes**
+  - **TDD:** Testear creación con itinerario completo, listado, detalle, edición y eliminación.
+  - **Código:** Crear `src/validations/ponente.validation.js`, `src/models/Ponente.js`, `src/controllers/ponente.controller.js`, `src/routes/ponente.route.js`.
+
+- [ ] **3.2. Subida de presentación (ponente)**
+  - **TDD:** Testear que el ponente puede subir/modificar su presentación, que rechaza archivos no permitidos.
+  - **Código:** Endpoint `POST /api/v1/ponentes/:id/presentacion` con middleware `upload`.
+
+---
+
+## FASE 4: GESTIÓN DE CLIENTES Y USUARIOS
+
+- [ ] **4.1. CRUD Clientes**
+  - **TDD:** Testear creación, listado, edición y eliminación solo por admin.
+  - **Código:** Crear `src/validations/client.validation.js`, `src/models/Client.js`, `src/controllers/client.controller.js`, `src/routes/client.route.js`.
+
+- [ ] **4.2. Asignación de roles**
+  - **TDD:** Testear que admin puede cambiar el rol de un usuario.
+  - **Código:** Endpoint `PUT /api/v1/users/:id/role`.
+
+---
+
+## FASE 5: CHAT Y NOTIFICACIONES
+
+- [ ] **5.1. Chat**
+  - **TDD:** Testear envío y recepción de mensajes.
+  - **Código:** Crear `src/models/Message.js`, `src/controllers/chat.controller.js`, `src/routes/chat.route.js`.
+
+- [ ] **5.2. Notificaciones**
+  - **TDD:** Testear creación y consulta de notificaciones por usuario.
+  - **Código:** Crear `src/models/Notification.js`, `src/controllers/notification.controller.js`, `src/routes/notification.route.js`.
+
+---
+
+## FASE 6: SEGURIDAD Y CALIDAD
+
+- [ ] **6.1. Swagger / OpenAPI**
+  - Instalar swagger-ui-express y js-yaml (`npm install swagger-ui-express js-yaml`).
+  - Crear archivo `openapi.yaml` con documentación de la API.
   - Integrar Swagger en `src/app.js`.
 
----
-
-## FASE 1: AUTENTICACIÓN Y USUARIOS
-
-- [ ] **1.1. Endpoint auth/register**
-  - **TDD:** Testear que solo administrador puede crear clientes, que rechaza campos inválidos (400), y que responde correctamente (201).
-  - **Código:** Crear `src/validations/user.validation.js` (nombre, email, rol), `src/controllers/auth.controller.js` (register), `src/routes/auth.route.js`.
-  - **Modelo:** Crear `src/models/User.js` con funciones para crear y consultar usuarios.
-
-- [ ] **1.2. Endpoint auth/me**
-  - **TDD:** Testear que devuelve los datos del usuario autenticado, y que rechaza sin token (401).
-  - **Código:** Añadir controlador `auth.getMe` y ruta correspondiente.
-
-- [ ] **1.3. CRUD de Usuarios (admin)**
-  - **TDD:** Testear listado, edición y eliminación de usuarios solo por administrador.
-  - **Código:** Crear `src/controllers/user.controller.js` (getAll, update, remove) y `src/routes/user.route.js`.
-
----
-
-## FASE 2: PRESUPUESTOS (CORE DEL PRODUCTO)
-
-- [ ] **2.1. CRUD de Presupuestos**
-  - **TDD:** Testear creación, listado, detalle, edición y eliminación solo por administrador. Validar que los importes sean positivos y la moneda válida.
-  - **Código:** Crear `src/validations/budget.validation.js`, `src/models/Budget.js`, `src/controllers/budget.controller.js`, `src/routes/budget.route.js`.
-
-- [ ] **2.2. Partidas de Presupuesto**
-  - **TDD:** Testear añadir, editar y eliminar partidas dentro de un presupuesto. Validar tipo ('ingreso' | 'gasto') e importe.
-  - **Código:** Añadir funciones al modelo Budget para gestionar partidas, y endpoints anidados (`/api/v1/budgets/:id/items`).
-
----
-
-## FASE 3: GESTIÓN DE EVENTOS
-
-- [ ] **3.1. Crear Evento**
-  - **TDD:** Testear que solo administrador puede crear, que valida campos obligatorios (título, fechas), y que el evento se asocia a un presupuesto opcionalmente.
-  - **Código:** Crear `src/validations/event.validation.js`, `src/models/Event.js`, `src/controllers/event.controller.js` (create), `src/routes/event.route.js`.
-
-- [ ] **3.2. Listar Eventos**
-  - **TDD:** Testear que administrador ve todos los eventos, cliente ve solo los suyos, y que filtra por estado/fecha/presupuesto si se proporciona.
-  - **Código:** Añadir controlador `event.getAll` con filtrado por rol.
-
-- [ ] **3.3. Detalle, Edición y Eliminación de Eventos**
-  - **TDD:** Testear detalle con datos del presupuesto asociado, edición y eliminación solo por administrador.
-  - **Código:** Añadir controladores `event.getById`, `event.update`, `event.remove`.
-
----
-
-## FASE 4: PRESENTACIONES
-
-- [ ] **4.1. Subir Presentación**
-  - **TDD:** Testear que cliente puede subir presentaciones a sus eventos, que rechaza archivos no permitidos, y que almacena la URL de Cloudinary.
-  - **Código:** Crear `src/validations/presentation.validation.js`, `src/models/Presentation.js`, `src/controllers/presentation.controller.js` (upload), `src/routes/presentation.route.js`. Usar middleware `upload` de la Fase 0.
-
-- [ ] **4.2. Consultar Presentaciones**
-  - **TDD:** Testear que administrador ve todas las presentaciones de un evento y cliente solo las suyas.
-  - **Código:** Añadir controladores `presentation.getByEvent`, `presentation.getById`.
+- [ ] **6.2. Rate limiting y seguridad**
+  - Implementar helmet, express-rate-limit.
+  - Validar CORS origins correctamente.
 
 ---
 
 ## REPORTE DE ENTREGA TDD OBLIGATORIO
 
-Al finalizar cada subtarea, el agente debe incluir el reporte del ciclo TDD siguiendo el formato definido en [AGENTS.md §13](./AGENTS.md#13-formato-de-salida-e-interacción).
+Al finalizar cada subtarea, incluir el reporte del ciclo TDD siguiendo el formato definido en [AGENTS.md §12](./AGENTS.md#12-formato-de-salida-e-interacción).
