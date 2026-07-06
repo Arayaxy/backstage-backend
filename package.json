@@ -13,8 +13,8 @@
   "license": "ISC",
   "devEngines": {
     "packageManager": {
-      "name": "pnpm",
-      "version": "11.10.0",
+      "name": "npm",
+      "version": "^11.12.1",
       "onFail": "download"
     }
   },
@@ -27,5 +27,9 @@
     "express-validator": "^7.3.2",
     "firebase-admin": "^14.1.0",
     "jsonwebtoken": "^9.0.3"
+  },
+  "allowScripts": {
+    "@firebase/util@1.15.1": true,
+    "protobufjs@7.6.5": true
   }
 }
