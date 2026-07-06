@@ -74,7 +74,7 @@ proyecto/
 ## Instalación
 
 ```console
-pnpm install
+npm install
 ```
 
 ## Variables de entorno
@@ -101,9 +101,9 @@ CORS_ORIGINS=(URL del frontend en despliegue)
 
 - Producción:
 ```console
-pnpm start
+npm start
 ```
 - Desarrollo:
 ```console
-pnpm dev
+npm dev
 ```
