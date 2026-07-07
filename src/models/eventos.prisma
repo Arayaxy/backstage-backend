@@ -1,0 +1,12 @@
+model Evento {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  nombre      String
+  descripcion String?
+  completado  Boolean  @default(false)
+  clienteId   String   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  cliente     Cliente  @relation(fields: [clienteId], references: [id]) // Enlace de clave foránea
+
+  @@map("eventos")
+}

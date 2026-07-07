@@ -1,0 +1,10 @@
+model Cliente {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  nombre    String
+  correo    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  eventos   Evento[] // Relación: Un cliente puede tener muchos eventos
+
+  @@map("clientes")
+}
