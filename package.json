@@ -4,8 +4,8 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
-    "start": "set NODE_ENV=production && node src/app.js",
-    "dev": "set NODE_ENV=development && nodemon src/app.js",
+    "start": "node src/app.js",
+    "dev": "cross-env NODE_ENV=development nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -31,5 +31,8 @@
   "allowScripts": {
     "@firebase/util@1.15.1": true,
     "protobufjs@7.6.5": true
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0"
   }
 }
