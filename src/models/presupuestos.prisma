@@ -1,8 +1,8 @@
 model Presupuesto {
   id_presupuesto       String  @id @default(uuid(7)) @db.Uuid
-  estado_prespuesto    Boolean
+  estado_presupuesto   String
   total                Int
-  fecha                Int
+  fecha                String
   nota_ubicacion       String
   precio_ubicacion     Int
   nota_catering        String
@@ -11,12 +11,12 @@ model Presupuesto {
   precio_audiovisuales Int
   nota_otros           String
   precio_otros         Int
-  catering             Boolean
-  audiovisuales        Boolean
-  otros                Boolean
+  catering             Boolean @default(false)
+  audiovisuales        Boolean @default(false)
+  otros                Boolean @default(false)
   observaciones        String
   eventoId             String  @db.Uuid
-  evento               Evento  @relation(fields: [eventoId], references: [id_evento]) // Enlace de clave foránea
+  evento               Evento  @relation(fields: [eventoId], references: [id_evento])
 
   @@map("presupuestos")
 }

@@ -4,7 +4,7 @@ model Ponente {
   docu_identificacion String
   email               String            @unique
   sector              String
-  telefono            Int
+  telefono            String
   foto_link           String
   cv_link             String
   empresa             String

@@ -5,11 +5,10 @@ model Espacio {
   direccion         String
   aforo             String
   nota              String
-  telefono_contacto Int
+  telefono_contacto String
   nombre_contacto   String
-  email_contacto    String @unique
-  salaId            String @db.Uuid
-  sala              Sala   @relation(fields: [salaId], references: [id_sala]) // Enlace de clave foránea
+  email_contacto    String
+  salas             Sala[]
 
   @@map("espacios")
 }

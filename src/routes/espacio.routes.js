@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { body, param } from 'express-validator';
+import { body, param, query } from 'express-validator';
 
 import { validarToken } from '../middlewares/auth.middleware.js';
 import { validarRol } from '../middlewares/validarRol.js';
@@ -17,24 +17,28 @@ export const espacioRouter = Router();
 
 //espacioRouter.use(validarToken, validarRol('admin'));
 
-espacioRouter.get('/', getEspacios);
+espacioRouter.get('/', [
+  query('ciudad').optional().isString(),
+  query('aforo').optional().isInt({ min: 0 }),
+  validate
+], getEspacios);
 
 espacioRouter.get('/:id', [
-  param('id').isUUID().withMessage('El id debe ser un uuid valido'),
+  param('id').isUUID(),
   validate
 ], getEspacio);
 
 espacioRouter.post('/', [
-  body('nombre').notEmpty().withMessage('El nombre del espacio es obligatorio'),
+  body('nombre_espacio').notEmpty(),
   validate
 ], postEspacio);
 
 espacioRouter.patch('/:id', [
-  param('id').isUUID().withMessage('El id debe ser un uuid valido'),
+  param('id').isUUID(),
   validate
 ], patchEspacio);
 
 espacioRouter.delete('/:id', [
-  param('id').isUUID().withMessage('El id debe ser un uuid valido'),
+  param('id').isUUID(),
   validate
 ], deleteEspacio);

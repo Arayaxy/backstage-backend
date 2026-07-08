@@ -3,20 +3,19 @@ model Evento {
   nombre_evento    String
   ciudad           String
   lugar_confirmado String
-  fecha_inicio     Int
-  fecha_fin        Int
+  fecha_inicio     String
+  fecha_fin        String
   numero_personas  Int
   tipo_evento      String
   nota             String
-  presupuestos     Presupuesto[]
   clienteId        String          @db.Uuid
-  cliente          Cliente         @relation(fields: [clienteId], references: [id_cliente]) // Enlace de clave foránea
+  cliente          Cliente         @relation(fields: [clienteId], references: [id_cliente])
   estadoId         String          @db.Uuid
-  estado           Estado          @relation(fields: [estadoId], references: [id_estado]) // Enlace de clave foránea
-  salaId           String          @db.Uuid
-  sala             Sala            @relation(fields: [salaId], references: [id_sala]) // Enlace de clave foránea
-  evento_ponenteId String          @db.Uuid
-  evento_ponente   Eventos_ponente @relation(fields: [evento_ponenteId], references: [id_evento_ponente]) // Enlace de clave foránea
+  estado           Estado          @relation(fields: [estadoId], references: [id_estado])
+  salaId           String?         @db.Uuid
+  sala             Sala?           @relation(fields: [salaId], references: [id_sala])
+  presupuestos     Presupuesto[]
+  eventos_ponente  Eventos_ponente[]
 
   @@map("eventos")
 }

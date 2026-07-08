@@ -1,11 +1,12 @@
 model Sala {
   id_sala            String    @id @default(uuid(7)) @db.Uuid
-  nombre_Sala        String
+  nombre_sala        String
   tipo_sala          String
   capacidad_max_sala String
   nota_sala          String
+  espacioId          String    @db.Uuid
+  espacio            Espacio   @relation(fields: [espacioId], references: [id_espacio])
   eventos            Evento[]
-  espacios           Espacio[]
 
   @@map("salas")
 }

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { body, param } from 'express-validator';
+import { body, param, query } from 'express-validator';
 
 import { validarToken } from '../middlewares/auth.middleware.js';
 import { validarRol } from '../middlewares/validarRol.js';
@@ -17,25 +17,32 @@ export const eventoRouter = Router();
 
 // eventoRouter.use(validarToken, validarRol('admin'));
 
-eventoRouter.get('/', getEventos);
+eventoRouter.get('/', [
+  query('ciudad').optional().isString(),
+  query('tipo_evento').optional().isString(),
+  validate
+], getEventos);
 
 eventoRouter.get('/:id', [
-  param('id').isUUID().withMessage('El id debe ser un uuid valido'),
+  param('id').isUUID(),
   validate
 ], getEvento);
 
 eventoRouter.post('/', [
-  body('nombre').notEmpty().withMessage('El nombre del evento es obligatorio'),
-  body('clienteId').isUUID().withMessage('El clienteId debe ser un uuid valido'),
+  body('nombre_evento').notEmpty(),
+  body('clienteId').isUUID(),
+  body('estadoId').isUUID(),
   validate
 ], postEvento);
 
 eventoRouter.patch('/:id', [
-  param('id').isUUID().withMessage('El id debe ser un uuid valido'),
+  param('id').isUUID(),
+  body('clienteId').optional().isUUID(),
+  body('estadoId').optional().isUUID(),
   validate
 ], patchEvento);
 
 eventoRouter.delete('/:id', [
-  param('id').isUUID().withMessage('El id debe ser un uuid valido'),
+  param('id').isUUID(),
   validate
 ], deleteEvento);

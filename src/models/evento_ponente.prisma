@@ -12,9 +12,10 @@ model Eventos_ponente {
   billete_ida_link          String
   billete_vuelta_link       String
   tipo_ponencia             String
-  eventos                   Evento[]
   ponenteId                 String   @db.Uuid
-  ponente                   Ponente  @relation(fields: [ponenteId], references: [id_ponente]) // Enlace de clave foránea
+  ponente                   Ponente  @relation(fields: [ponenteId], references: [id_ponente])
+  eventoId                  String   @db.Uuid
+  evento                    Evento   @relation(fields: [eventoId], references: [id_evento])
 
   @@map("eventos_ponentes")
 }
