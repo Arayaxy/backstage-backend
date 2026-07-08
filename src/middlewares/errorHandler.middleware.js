@@ -12,6 +12,7 @@ export const errorHandler = (err, req, res, _next) => {
   console.error();
 
   res.status(err.status || 500).json({
+    ok: false,
     message: env.mode === 'production' ? 'Error interno del servidor' : err.message
   });
 };

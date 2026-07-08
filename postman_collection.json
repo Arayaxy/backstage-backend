@@ -1,0 +1,320 @@
+{
+  "info": {
+    "name": "Proyecto Tripulaciones API",
+    "description": "Colección para probar los endpoints en local.\n\n## Autenticación\n1. Usa el endpoint **Login** con un token de Firebase en el header `Authorization: Bearer <firebase_token>`.\n2. El servidor responde con una cookie httpOnly con el JWT.\n3. Copia el valor de la cookie `token` de los response headers (Set-Cookie).\n4. Pégalo como valor de la variable `jwt_token` en la colección (Edit → Variables).\n5. El resto de endpoints lo usarán automáticamente en `Authorization: Bearer {{jwt_token}}`.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "jwt_token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/health"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "POST Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer <firebase_token>" }
+            ],
+            "url": "{{base_url}}/auth/login"
+          }
+        },
+        {
+          "name": "GET Verify Session",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/auth/verify"
+          }
+        },
+        {
+          "name": "POST Logout",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/auth/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Eventos",
+      "item": [
+        {
+          "name": "GET listar eventos",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": "{{base_url}}/eventos"
+          }
+        },
+        {
+          "name": "GET buscar evento por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": "{{base_url}}/eventos/1"
+          }
+        },
+        {
+          "name": "POST crear evento",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Evento de prueba\",\n  \"clienteId\": \"uuid-del-cliente\"\n}"
+            },
+            "url": "{{base_url}}/eventos"
+          }
+        },
+        {
+          "name": "PATCH actualizar evento",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Evento actualizado\"\n}"
+            },
+            "url": "{{base_url}}/eventos/1"
+          }
+        },
+        {
+          "name": "DELETE eliminar evento",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": "{{base_url}}/eventos/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "GET listar clientes",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": "{{base_url}}/clientes"
+          }
+        },
+        {
+          "name": "GET buscar cliente por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": "{{base_url}}/clientes/1"
+          }
+        },
+        {
+          "name": "POST crear cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Cliente de prueba\",\n  \"correo\": \"cliente@test.com\"\n}"
+            },
+            "url": "{{base_url}}/clientes"
+          }
+        },
+        {
+          "name": "PATCH actualizar cliente",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Cliente actualizado\"\n}"
+            },
+            "url": "{{base_url}}/clientes/1"
+          }
+        },
+        {
+          "name": "DELETE eliminar cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": "{{base_url}}/clientes/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Espacios",
+      "item": [
+        {
+          "name": "GET listar espacios",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": "{{base_url}}/espacios"
+          }
+        },
+        {
+          "name": "GET buscar espacio por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": "{{base_url}}/espacios/1"
+          }
+        },
+        {
+          "name": "POST crear espacio",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Espacio de prueba\"\n}"
+            },
+            "url": "{{base_url}}/espacios"
+          }
+        },
+        {
+          "name": "PATCH actualizar espacio",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Espacio actualizado\"\n}"
+            },
+            "url": "{{base_url}}/espacios/1"
+          }
+        },
+        {
+          "name": "DELETE eliminar espacio",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": "{{base_url}}/espacios/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ponentes",
+      "item": [
+        {
+          "name": "GET listar ponentes",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": "{{base_url}}/ponentes"
+          }
+        },
+        {
+          "name": "GET buscar ponente por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": "{{base_url}}/ponentes/1"
+          }
+        },
+        {
+          "name": "POST crear ponente",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ponente de prueba\"\n}"
+            },
+            "url": "{{base_url}}/ponentes"
+          }
+        },
+        {
+          "name": "PATCH actualizar ponente",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ponente actualizado\"\n}"
+            },
+            "url": "{{base_url}}/ponentes/1"
+          }
+        },
+        {
+          "name": "DELETE eliminar ponente",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": "{{base_url}}/ponentes/1"
+          }
+        }
+      ]
+    }
+  ]
+}

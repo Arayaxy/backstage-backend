@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Cliente {
+  id      Int      @id @default(autoincrement())
+  nombre  String
+  correo  String
+  eventos Evento[]
+}
+
+model Evento {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  descripcion String?
+  completado  Boolean  @default(false)
+  clienteId   Int
+  cliente     Cliente  @relation(fields: [clienteId], references: [id])
+}
