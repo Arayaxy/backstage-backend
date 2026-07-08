@@ -8,8 +8,11 @@
     "dev": "cross-env NODE_ENV=development nodemon src/app.js",
     "db:migrate": "npx prisma migrate dev",
     "db:deploy": "npx prisma migrate deploy",
+    "db:reset": "npx prisma migrate reset",
     "db:generate": "npx prisma generate",
     "seed": "node src/utils/seed.js",
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma migrate deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -40,10 +43,16 @@
     "@firebase/util@1.15.1": true,
     "protobufjs@7.6.5": true,
     "prisma@7.8.0": true,
-    "@prisma/engines@7.8.0": true
+    "@prisma/engines@7.8.0": true,
+    "core-js@3.49.0": true
   },
   "devDependencies": {
     "cross-env": "^10.1.0",
     "prisma": "^7.8.0"
+  },
+  "overrides": {
+    "jwks-rsa": {
+      "jose": "^5.0.0"
+    }
   }
 }
