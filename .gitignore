@@ -1,15 +1,8 @@
 node_modules
 .env
-<<<<<<< HEAD
-src/config/firebaseServiceAccount.json
-src/config/firebaseServiceAccount.7z
-=======
-<<<<<<< HEAD
-uploads/
-=======
->>>>>>> develop
 
 /src/generated/prisma
 # De momento metemos migrations a gitignore, al menos hasta que tengamos un esquemas más estable
 /migrations
->>>>>>> 427636bf07e82e51dfca0701fb4b459d045b1157
+
+uploads/

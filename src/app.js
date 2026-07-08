@@ -4,10 +4,8 @@ import cors from 'cors';
 import { notFoundHandler, errorHandler } from './middlewares/index.js';
 import { initializeApp, cert } from 'firebase-admin/app';
 import cookieParser from 'cookie-parser';
-import { healthRouter, authRouter, clienteRouter, eventoRouter } from './routes/index.js';
-import { uploadRouter } from './routes/upload.route.js';
+import { healthRouter, authRouter, clienteRouter, eventoRouter, uploadRouter } from './routes/index.js';
 import { serviceAccount } from './config/firebaseServiceAccount.js';
-
 
 if (env.mode === 'production')
   console.log(`\n⚡RUNNING IN PRODUCTION MODE ⚡`);
