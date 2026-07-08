@@ -4,7 +4,9 @@ import cors from 'cors';
 import { notFoundHandler, errorHandler } from './middlewares/index.js';
 import { initializeApp, cert } from 'firebase-admin/app';
 import cookieParser from 'cookie-parser';
-import { healthRouter, authRouter, clienteRouter, espacioRouter, eventoRouter, ponenteRouter } from './routes/index.js';
+
+import { healthRouter, authRouter, clienteRouter, espacioRouter, eventoRouter, ponenteRouter, uploadRouter } from './routes/index.js';
+
 import { serviceAccount } from './config/firebaseServiceAccount.js';
 
 if (env.mode === 'production')
@@ -39,6 +41,9 @@ if (env.mode === 'development')
 
 app.use(`${env.apiUrl}/health`, healthRouter);
 app.use(`${env.apiUrl}/auth`, authRouter);
+
+app.use(`${env.apiUrl}/upload`, uploadRouter);
+
 app.use(`${env.apiUrl}/eventos`, eventoRouter);
 app.use(`${env.apiUrl}/clientes`, clienteRouter);
 app.use(`${env.apiUrl}/espacios`, espacioRouter);

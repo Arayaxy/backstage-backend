@@ -15,5 +15,8 @@ export const env = {
   port: parseInt(process.env.PORT, 10) || 3000,
   apiUrl: process.env.API_URL_BASE,
   corsOrigins: (process.env.CORS_ORIGINS || '').split(',').filter(Boolean),
-  jwtSecret: process.env.JWT_SECRET
+  jwtSecret: process.env.JWT_SECRET,
+  cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+  cloudApiKey: process.env.CLOUDINARY_API_KEY,
+  cloudApiSecret: process.env.CLOUDINARY_API_SECRET,
 };
