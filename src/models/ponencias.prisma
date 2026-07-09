@@ -1,16 +1,16 @@
 model Ponencia {
   id                      String   @id @default(uuid(7)) @db.Uuid
   nombreHotel             String   @map("nombre_hotel")
-  notaTransporte          String   @map("nota_transporte")
+  notaTransporte          String?  @map("nota_transporte")
   horarioIdaTransporte    DateTime @map("horario_ida_transporte")
   horarioVueltaTransporte DateTime @map("horario_vuelta_transporte")
   localizacionHotel       String   @map("localizacion_hotel")
   horarioPonencia         DateTime @map("horario_ponencia")
   checkinHorario          DateTime @map("checkin_horario")
   ponenteEstado           String   @map("ponente_estado")
-  presentacionLink        String   @map("presentacion_link")
-  billeteIdaLink          String   @map("billete_ida_link")
-  billeteVueltaLink       String   @map("billete_vuelta_link")
+  presentacionLink        String?  @map("presentacion_link")
+  billeteIdaLink          String?  @map("billete_ida_link")
+  billeteVueltaLink       String?  @map("billete_vuelta_link")
   tipoPonencia            String   @map("tipo_ponencia")
   eventos                 Evento[]
   idPonente               String   @map("id_ponente") @db.Uuid

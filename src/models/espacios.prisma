@@ -4,7 +4,7 @@ model Espacio {
   ciudad           String
   direccion        String
   aforo            Int
-  nota             String
+  nota             String?
   telefonoContacto String @map("telefono_contacto")
   nombreContacto   String @map("nombre_contacto")
   emailContacto    String @map("email_contacto")

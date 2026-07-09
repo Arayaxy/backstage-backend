@@ -5,8 +5,8 @@ model Ponente {
   email              String     @unique
   sector             String
   telefono           String
-  fotoLink           String     @map("foto_link")
-  cvLink             String     @map("cv_link")
+  fotoLink           String?    @map("foto_link")
+  cvLink             String?    @map("cv_link")
   empresa            String
   cargo              String
   eventosPonente     Ponencia[]

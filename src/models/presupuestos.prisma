@@ -3,18 +3,18 @@ model Presupuesto {
   estadoPresupuesto   Boolean  @map("estado_presupuesto")
   total               Float
   fecha               DateTime
-  notaUbicacion       String   @map("nota_ubicacion")
+  notaUbicacion       String?  @map("nota_ubicacion")
   precioUbicacion     Float    @map("precio_ubicacion")
   catering            Boolean
-  notaCatering        String   @map("nota_catering")
+  notaCatering        String?  @map("nota_catering")
   precioCatering      Float    @map("precio_catering")
   audiovisuales       Boolean
-  notaAudiovisuales   String   @map("nota_audiovisuales")
+  notaAudiovisuales   String?  @map("nota_audiovisuales")
   precioAudiovisuales Float    @map("precio_audiovisuales")
   otros               Boolean
-  notaOtros           String   @map("nota_otros")
+  notaOtros           String?  @map("nota_otros")
   precioOtros         Float    @map("precio_otros")
-  observaciones       String
+  observaciones       String?
   evento              Evento?
 
   @@map("presupuestos")
