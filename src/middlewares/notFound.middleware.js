@@ -1,7 +1,7 @@
+// Se ejecuta cuando ninguna de las rutas anteriores coincide con la petición.
 export const notFoundHandler = (req, res) => {
-  const error = new Error(`La ruta solicitada [${req.method} ${req.originalUrl}] no existe.`);
-
-  res.status(404).json({
-    message: error.message
+  return res.status(404).json({
+    ok: false,
+    message: `La ruta solicitada [${req.method} ${req.originalUrl}] no existe.`,
   });
 };

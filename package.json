@@ -12,7 +12,7 @@
     "db:generate": "npx prisma generate",
     "postinstall": "prisma generate",
     "vercel-build": "prisma migrate deploy",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env API_URL_BASE=/api/v1 JWT_SECRET=test-secret NODE_ENV=test node --test"
   },
   "keywords": [],
   "author": "",

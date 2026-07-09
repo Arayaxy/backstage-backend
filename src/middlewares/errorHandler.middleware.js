@@ -1,18 +1,33 @@
+import multer from 'multer';
 import { env } from '../config/env.js';
 
 export const errorHandler = (err, req, res, _next) => {
-  console.error(`\n 🚨 CRITICAL ERROR 🚨`);
-  console.error(`- Time: ${new Date().toISOString()}`);
-  console.error(`- Route: ${req.method} ${req.originalUrl}`);
-  console.error(`- Message: ${err.message}`);
+  // Usa el estado del error o responde con 500 si no se especificó ninguno.
+  let status = err.status || err.statusCode || 500;
+  let message = err.message || 'Error interno del servidor';
 
-  if (env.mode === 'development')
-    console.error(`- Stack Trace:\n${err.stack}`);
+  // Convierte los errores de subida de Multer en respuestas comprensibles.
+  if (err instanceof multer.MulterError) {
+    status = 400;
+    message = err.code === 'LIMIT_FILE_SIZE'
+      ? 'El archivo supera el tamaño máximo permitido'
+      : 'No se pudo procesar el archivo';
+  }
 
-  console.error();
+  // Registra información útil para encontrar el origen del error.
+  console.error({
+    time: new Date().toISOString(),
+    method: req.method,
+    route: req.originalUrl,
+    message: err.message,
+    ...(env.mode === 'development' && { stack: err.stack }),
+  });
 
-  res.status(err.status || 500).json({
+  // En producción no se muestran detalles de errores internos.
+  const canExposeMessage = status < 500 || env.mode === 'development';
+
+  return res.status(status).json({
     ok: false,
-    message: env.mode === 'production' ? 'Error interno del servidor' : err.message
+    message: canExposeMessage ? message : 'Error interno del servidor',
   });
 };
