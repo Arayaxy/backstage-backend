@@ -683,3 +683,211 @@ paths:
       responses:
         "200":
           description: Ponente eliminado
+
+  /salas:
+    get:
+      tags: [Salas]
+      summary: Listar/filtrar salas
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: idEspacio
+          schema:
+            type: string
+            format: uuid
+          description: Filtrar por espacio
+      responses:
+        "200":
+          description: Lista de salas
+
+    post:
+      tags: [Salas]
+      summary: Crear sala
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nombreSala, tipoSala, capacidadMaxSala, idEspacio]
+              properties:
+                nombreSala: { type: string }
+                tipoSala: { type: string }
+                capacidadMaxSala: { type: integer }
+                notaSala: { type: string }
+                idEspacio: { type: string, format: uuid }
+      responses:
+        "201":
+          description: Sala creada
+
+  /salas/{id}:
+    get:
+      tags: [Salas]
+      summary: Obtener sala por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: Sala encontrada
+
+    patch:
+      tags: [Salas]
+      summary: Actualizar sala
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: "#/components/schemas/UUID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombreSala: { type: string }
+                tipoSala: { type: string }
+                capacidadMaxSala: { type: integer }
+                notaSala: { type: string }
+                idEspacio: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Sala actualizada
+
+    delete:
+      tags: [Salas]
+      summary: Eliminar sala
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: Sala eliminada
+
+  /ponencias:
+    get:
+      tags: [Ponencias]
+      summary: Listar/filtrar ponencias
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: idPonente
+          schema:
+            type: string
+            format: uuid
+          description: Filtrar por ponente
+      responses:
+        "200":
+          description: Lista de ponencias
+
+    post:
+      tags: [Ponencias]
+      summary: Crear ponencia
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nombreHotel, localizacionHotel, horarioPonencia, ponenteEstado, tipoPonencia, idPonente]
+              properties:
+                nombreHotel: { type: string }
+                notaTransporte: { type: string }
+                horarioIdaTransporte: { type: string, format: date-time }
+                horarioVueltaTransporte: { type: string, format: date-time }
+                localizacionHotel: { type: string }
+                horarioPonencia: { type: string, format: date-time }
+                checkinHorario: { type: string, format: date-time }
+                ponenteEstado: { type: string }
+                presentacionLink: { type: string }
+                billeteIdaLink: { type: string }
+                billeteVueltaLink: { type: string }
+                tipoPonencia: { type: string }
+                idPonente: { type: string, format: uuid }
+      responses:
+        "201":
+          description: Ponencia creada
+
+  /ponencias/{id}:
+    get:
+      tags: [Ponencias]
+      summary: Obtener ponencia por ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: Ponencia encontrada
+
+    patch:
+      tags: [Ponencias]
+      summary: Actualizar ponencia
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: "#/components/schemas/UUID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombreHotel: { type: string }
+                notaTransporte: { type: string }
+                horarioIdaTransporte: { type: string, format: date-time }
+                horarioVueltaTransporte: { type: string, format: date-time }
+                localizacionHotel: { type: string }
+                horarioPonencia: { type: string, format: date-time }
+                checkinHorario: { type: string, format: date-time }
+                ponenteEstado: { type: string }
+                presentacionLink: { type: string }
+                billeteIdaLink: { type: string }
+                billeteVueltaLink: { type: string }
+                tipoPonencia: { type: string }
+                idPonente: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Ponencia actualizada
+
+    delete:
+      tags: [Ponencias]
+      summary: Eliminar ponencia
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: Ponencia eliminada
