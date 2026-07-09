@@ -1,4 +1,4 @@
-import { uploadImagenPonente, uploadPresentacion, uploadCV, uploadDocumento } from '../config/upload.js';
+import { uploadImagenPonente, uploadPresentacion, uploadCV, uploadBillete, uploadDocumento } from '../config/upload.js';
 
 // Adapta Multer para enviar cualquier error al manejador global.
 const runUpload = uploader => (req, res, next) => {
@@ -13,6 +13,7 @@ export const imagenPonente = runUpload(uploadImagenPonente.single('file'));
 export const presentacion = runUpload(uploadPresentacion.single('file'));
 export const documento = runUpload(uploadDocumento.single('file'));
 export const cv = runUpload(uploadCV.single('file'));
+export const billete = runUpload(uploadBillete.single('file'));
 
 // Guarda temporalmente la última versión de cada presentación en memoria.
 const versionTracker = new Map();

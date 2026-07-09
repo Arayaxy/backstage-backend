@@ -1,5 +1,6 @@
 import { checkSchema } from 'express-validator';
 
+
 // Valida el ID del ponente antes de subir su imagen.
 export const imagenPonenteValidation = checkSchema({
   ponente_id: {
@@ -42,6 +43,27 @@ export const cvValidation = checkSchema({
     },
     isUUID: {
       errorMessage: 'ponente_id no es un UUID válido',
+    },
+  },
+}, ['query']);
+
+// Valida el ID del ponente y tipo (ida/vuelta) para subir billetes.
+export const billeteValidation = checkSchema({
+  ponente_id: {
+    notEmpty: {
+      errorMessage: 'ponente_id es obligatorio',
+    },
+    isUUID: {
+      errorMessage: 'ponente_id no es un UUID válido',
+    },
+  },
+  tipo: {
+    notEmpty: {
+      errorMessage: 'tipo es obligatorio (ida o vuelta)',
+    },
+    isIn: {
+      options: [['ida', 'vuelta']],
+      errorMessage: 'tipo debe ser "ida" o "vuelta"',
     },
   },
 }, ['query']);

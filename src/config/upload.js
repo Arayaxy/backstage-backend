@@ -37,9 +37,22 @@ const storageCV = new CloudinaryStorage({
   }),
 });
 
+const storageBillete = new CloudinaryStorage({
+  cloudinary,
+  params: (req, file) => ({
+    folder: 'ponentes/billetes',
+    public_id: req.query.ponente_id
+      ? `${req.query.ponente_id}/billete-${req.query.tipo || 'ida'}`
+      : undefined,
+    allowed_formats: ['pdf', 'jpg', 'jpeg', 'png'],
+    resource_type: 'auto',
+  }),
+});
+
 const multerOptions = { limits: { fileSize: 30 * 1024 * 1024 } };
 
 export const uploadImagenPonente = multer({ ...multerOptions, storage: storageImagen });
 export const uploadPresentacion  = multer({ ...multerOptions, storage: storagePresentacion });
 export const uploadCV            = multer({ ...multerOptions, storage: storageCV });
+export const uploadBillete       = multer({ ...multerOptions, storage: storageBillete });
 export const uploadDocumento     = multer({ ...multerOptions, storage: makeStorage('documentos', ['pdf', 'ppt', 'pptx', 'doc', 'docx']) });
