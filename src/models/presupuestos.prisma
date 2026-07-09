@@ -2,7 +2,7 @@ model Presupuesto {
   id                  String   @id @default(uuid(7)) @db.Uuid
   estadoPresupuesto   Boolean  @map("estado_presupuesto")
   total               Float
-  fecha               DateTime
+  fecha               DateTime @db.Timestamptz(0)
   notaUbicacion       String?  @map("nota_ubicacion")
   precioUbicacion     Float    @map("precio_ubicacion")
   catering            Boolean

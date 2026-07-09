@@ -18,7 +18,7 @@ CREATE TABLE "espacios" (
     "ciudad" TEXT NOT NULL,
     "direccion" TEXT NOT NULL,
     "aforo" INTEGER NOT NULL,
-    "nota" TEXT NOT NULL,
+    "nota" TEXT,
     "telefono_contacto" TEXT NOT NULL,
     "nombre_contacto" TEXT NOT NULL,
     "email_contacto" TEXT NOT NULL,
@@ -40,16 +40,16 @@ CREATE TABLE "eventos" (
     "nombre_evento" TEXT NOT NULL,
     "ciudad" TEXT NOT NULL,
     "lugar_confirmado" TEXT NOT NULL,
-    "fecha_inicio" TIMESTAMP(3) NOT NULL,
-    "fecha_fin" TIMESTAMP(3) NOT NULL,
+    "fecha_inicio" TIMESTAMPTZ(0) NOT NULL,
+    "fecha_fin" TIMESTAMPTZ(0) NOT NULL,
     "numero_personas" INTEGER NOT NULL,
     "tipo_evento" TEXT NOT NULL,
-    "nota" TEXT NOT NULL,
+    "nota" TEXT,
     "id_presupuesto" UUID,
     "id_cliente" UUID NOT NULL,
     "id_estado" UUID NOT NULL,
-    "id_sala" UUID NOT NULL,
-    "id_ponencia" UUID NOT NULL,
+    "id_sala" UUID,
+    "id_ponencia" UUID,
 
     CONSTRAINT "eventos_pkey" PRIMARY KEY ("id")
 );
@@ -58,16 +58,16 @@ CREATE TABLE "eventos" (
 CREATE TABLE "ponencias" (
     "id" UUID NOT NULL,
     "nombre_hotel" TEXT NOT NULL,
-    "nota_transporte" TEXT NOT NULL,
-    "horario_ida_transporte" TIMESTAMP(3) NOT NULL,
-    "horario_vuelta_transporte" TIMESTAMP(3) NOT NULL,
+    "nota_transporte" TEXT,
+    "horario_ida_transporte" TIMESTAMPTZ(0) NOT NULL,
+    "horario_vuelta_transporte" TIMESTAMPTZ(0) NOT NULL,
     "localizacion_hotel" TEXT NOT NULL,
-    "horario_ponencia" TIMESTAMP(3) NOT NULL,
-    "checkin_horario" TIMESTAMP(3) NOT NULL,
+    "horario_ponencia" TIMESTAMPTZ(0) NOT NULL,
+    "checkin_horario" TIMESTAMPTZ(0) NOT NULL,
     "ponente_estado" TEXT NOT NULL,
-    "presentacion_link" TEXT NOT NULL,
-    "billete_ida_link" TEXT NOT NULL,
-    "billete_vuelta_link" TEXT NOT NULL,
+    "presentacion_link" TEXT,
+    "billete_ida_link" TEXT,
+    "billete_vuelta_link" TEXT,
     "tipo_ponencia" TEXT NOT NULL,
     "id_ponente" UUID NOT NULL,
 
@@ -82,8 +82,8 @@ CREATE TABLE "ponentes" (
     "email" TEXT NOT NULL,
     "sector" TEXT NOT NULL,
     "telefono" TEXT NOT NULL,
-    "foto_link" TEXT NOT NULL,
-    "cv_link" TEXT NOT NULL,
+    "foto_link" TEXT,
+    "cv_link" TEXT,
     "empresa" TEXT NOT NULL,
     "cargo" TEXT NOT NULL,
 
@@ -95,19 +95,19 @@ CREATE TABLE "presupuestos" (
     "id" UUID NOT NULL,
     "estado_presupuesto" BOOLEAN NOT NULL,
     "total" DOUBLE PRECISION NOT NULL,
-    "fecha" TIMESTAMP(3) NOT NULL,
-    "nota_ubicacion" TEXT NOT NULL,
+    "fecha" TIMESTAMPTZ(0) NOT NULL,
+    "nota_ubicacion" TEXT,
     "precio_ubicacion" DOUBLE PRECISION NOT NULL,
     "catering" BOOLEAN NOT NULL,
-    "nota_catering" TEXT NOT NULL,
+    "nota_catering" TEXT,
     "precio_catering" DOUBLE PRECISION NOT NULL,
     "audiovisuales" BOOLEAN NOT NULL,
-    "nota_audiovisuales" TEXT NOT NULL,
+    "nota_audiovisuales" TEXT,
     "precio_audiovisuales" DOUBLE PRECISION NOT NULL,
     "otros" BOOLEAN NOT NULL,
-    "nota_otros" TEXT NOT NULL,
+    "nota_otros" TEXT,
     "precio_otros" DOUBLE PRECISION NOT NULL,
-    "observaciones" TEXT NOT NULL,
+    "observaciones" TEXT,
 
     CONSTRAINT "presupuestos_pkey" PRIMARY KEY ("id")
 );
@@ -118,7 +118,7 @@ CREATE TABLE "salas" (
     "nombre_sala" TEXT NOT NULL,
     "tipo_sala" TEXT NOT NULL,
     "capacidad_max_sala" INTEGER NOT NULL,
-    "nota_sala" TEXT NOT NULL,
+    "nota_sala" TEXT,
     "id_espacio" UUID NOT NULL,
 
     CONSTRAINT "salas_pkey" PRIMARY KEY ("id")
@@ -152,10 +152,10 @@ ALTER TABLE "eventos" ADD CONSTRAINT "eventos_id_cliente_fkey" FOREIGN KEY ("id_
 ALTER TABLE "eventos" ADD CONSTRAINT "eventos_id_estado_fkey" FOREIGN KEY ("id_estado") REFERENCES "estados"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "eventos" ADD CONSTRAINT "eventos_id_sala_fkey" FOREIGN KEY ("id_sala") REFERENCES "salas"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "eventos" ADD CONSTRAINT "eventos_id_sala_fkey" FOREIGN KEY ("id_sala") REFERENCES "salas"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "eventos" ADD CONSTRAINT "eventos_id_ponencia_fkey" FOREIGN KEY ("id_ponencia") REFERENCES "ponencias"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "eventos" ADD CONSTRAINT "eventos_id_ponencia_fkey" FOREIGN KEY ("id_ponencia") REFERENCES "ponencias"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ponencias" ADD CONSTRAINT "ponencias_id_ponente_fkey" FOREIGN KEY ("id_ponente") REFERENCES "ponentes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
