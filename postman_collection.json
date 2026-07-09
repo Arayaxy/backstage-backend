@@ -55,7 +55,7 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre_evento\": \"Evento de prueba\",\n  \"clienteId\": \"uuid-del-cliente\",\n  \"estadoId\": \"uuid-del-estado\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"nombre_evento\": \"Evento de prueba\",\n  \"ciudad\": \"Bilbao\",\n  \"lugar_confirmado\": \"Palacio Europa\",\n  \"fecha_inicio\": \"2026-07-15\",\n  \"fecha_fin\": \"2026-07-17\",\n  \"numero_personas\": 200,\n  \"tipo_evento\": \"Congreso\",\n  \"nota\": \"\",\n  \"clienteId\": \"uuid-del-cliente\",\n  \"estadoId\": \"uuid-del-estado\"\n}" },
             "url": "{{base_url}}/eventos"
           }
         },
@@ -64,7 +64,7 @@
           "request": {
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre_evento\": \"Evento actualizado\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"nombre_evento\": \"Evento actualizado\",\n  \"numero_personas\": 250\n}" },
             "url": "{{base_url}}/eventos/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
           }
         },
@@ -82,7 +82,7 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"cliente\": \"Cliente de prueba\",\n  \"email\": \"cliente@test.com\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"cliente\": \"Cliente de prueba\",\n  \"email\": \"cliente@test.com\",\n  \"telefono\": \"944123456\",\n  \"empresa\": \"Empresa SL\",\n  \"sector\": \"Tecnologia\",\n  \"ciudad\": \"Bilbao\"\n}" },
             "url": "{{base_url}}/clientes"
           }
         },
@@ -91,7 +91,7 @@
           "request": {
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"cliente\": \"Cliente actualizado\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"cliente\": \"Cliente actualizado\",\n  \"telefono\": \"944654321\"\n}" },
             "url": "{{base_url}}/clientes/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
           }
         },
@@ -103,13 +103,14 @@
       "item": [
         { "name": "GET listar espacios", "request": { "method": "GET", "url": "{{base_url}}/espacios" } },
         { "name": "GET filtrar espacios", "request": { "method": "GET", "url": "{{base_url}}/espacios?ciudad=Bilbao" } },
+        { "name": "GET buscar por capacidad", "request": { "method": "GET", "url": "{{base_url}}/espacios/buscar?min=100&max=500" } },
         { "name": "GET buscar espacio por ID", "request": { "method": "GET", "url": "{{base_url}}/espacios/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6" } },
         {
           "name": "POST crear espacio",
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre_espacio\": \"Espacio de prueba\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"nombre_espacio\": \"Espacio de prueba\",\n  \"ciudad\": \"Bilbao\",\n  \"direccion\": \"Calle Principal 1\",\n  \"aforo\": \"500\",\n  \"nota\": \"\",\n  \"telefono_contacto\": \"944123456\",\n  \"nombre_contacto\": \"Contacto\",\n  \"email_contacto\": \"contacto@espacio.com\"\n}" },
             "url": "{{base_url}}/espacios"
           }
         },
@@ -118,7 +119,7 @@
           "request": {
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre_espacio\": \"Espacio actualizado\"\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"nombre_espacio\": \"Espacio actualizado\",\n  \"aforo\": \"1000\"\n}" },
             "url": "{{base_url}}/espacios/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
           }
         },
@@ -139,7 +140,12 @@
               "mode": "formdata",
               "formdata": [
                 { "key": "nombre_ponente", "value": "Ponente de prueba", "type": "text" },
+                { "key": "docu_identificacion", "value": "12345678A", "type": "text" },
                 { "key": "email", "value": "ponente@test.com", "type": "text" },
+                { "key": "sector", "value": "Tecnologia", "type": "text" },
+                { "key": "telefono", "value": "944123456", "type": "text" },
+                { "key": "empresa", "value": "Empresa SL", "type": "text" },
+                { "key": "cargo", "value": "Director", "type": "text" },
                 { "key": "file", "type": "file", "src": "" }
               ]
             },
@@ -154,6 +160,7 @@
               "mode": "formdata",
               "formdata": [
                 { "key": "nombre_ponente", "value": "Ponente actualizado", "type": "text" },
+                { "key": "cargo", "value": "Director Senior", "type": "text" },
                 { "key": "file", "type": "file", "src": "" }
               ]
             },

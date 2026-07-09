@@ -207,9 +207,18 @@ paths:
           application/json:
             schema:
               type: object
-              required: [nombre]
+              required: [nombre_evento, clienteId, estadoId]
               properties:
-                nombre: { type: string }
+                nombre_evento: { type: string }
+                ciudad: { type: string }
+                lugar_confirmado: { type: string }
+                fecha_inicio: { type: string }
+                fecha_fin: { type: string }
+                numero_personas: { type: integer }
+                tipo_evento: { type: string }
+                nota: { type: string }
+                clienteId: { type: string, format: uuid }
+                estadoId: { type: string, format: uuid }
       responses:
         "200":
           description: Evento creado
@@ -255,6 +264,22 @@ paths:
           required: true
           schema:
             $ref: "#/components/schemas/UUID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre_evento: { type: string }
+                ciudad: { type: string }
+                lugar_confirmado: { type: string }
+                fecha_inicio: { type: string }
+                fecha_fin: { type: string }
+                numero_personas: { type: integer }
+                tipo_evento: { type: string }
+                nota: { type: string }
+                clienteId: { type: string, format: uuid }
+                estadoId: { type: string, format: uuid }
       responses:
         "200":
           description: Evento actualizado
@@ -314,10 +339,14 @@ paths:
           application/json:
             schema:
               type: object
-              required: [nombre, correo]
+              required: [cliente, email]
               properties:
-                nombre: { type: string }
-                correo: { type: string, format: email }
+                cliente: { type: string }
+                email: { type: string, format: email }
+                telefono: { type: string }
+                empresa: { type: string }
+                sector: { type: string }
+                ciudad: { type: string }
       responses:
         "200":
           description: Cliente creado
@@ -353,6 +382,18 @@ paths:
           required: true
           schema:
             $ref: "#/components/schemas/UUID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cliente: { type: string }
+                email: { type: string, format: email }
+                telefono: { type: string }
+                empresa: { type: string }
+                sector: { type: string }
+                ciudad: { type: string }
       responses:
         "200":
           description: Cliente actualizado
@@ -371,6 +412,54 @@ paths:
       responses:
         "200":
           description: Cliente eliminado
+
+  /espacios/buscar:
+    get:
+      tags: [Espacios]
+      summary: Buscar espacios y salas por capacidad
+      parameters:
+        - in: query
+          name: min
+          schema: { type: integer, minimum: 0 }
+          description: Capacidad mínima (opcional, default 0)
+        - in: query
+          name: max
+          schema: { type: integer, minimum: 0 }
+          description: Capacidad máxima (opcional, default 999999)
+      responses:
+        "200":
+          description: Espacios y salas que cumplen el rango de capacidad
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean, example: true }
+                  data:
+                    type: object
+                    properties:
+                      espacios:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id_espacio: { type: string, format: uuid }
+                            nombre_espacio: { type: string }
+                            aforo: { type: string }
+                      salas:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id_sala: { type: string, format: uuid }
+                            nombre_sala: { type: string }
+                            capacidad_max_sala: { type: string }
+                            espacio:
+                              type: object
+                              properties:
+                                id_espacio: { type: string, format: uuid }
+                                nombre_espacio: { type: string }
+                                aforo: { type: string }
 
   /espacios:
     get:
@@ -400,9 +489,16 @@ paths:
           application/json:
             schema:
               type: object
-              required: [nombre]
+              required: [nombre_espacio]
               properties:
-                nombre: { type: string }
+                nombre_espacio: { type: string }
+                ciudad: { type: string }
+                direccion: { type: string }
+                aforo: { type: string }
+                nota: { type: string }
+                telefono_contacto: { type: string }
+                nombre_contacto: { type: string }
+                email_contacto: { type: string }
       responses:
         "200":
           description: Espacio creado
@@ -434,6 +530,20 @@ paths:
           required: true
           schema:
             $ref: "#/components/schemas/UUID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre_espacio: { type: string }
+                ciudad: { type: string }
+                direccion: { type: string }
+                aforo: { type: string }
+                nota: { type: string }
+                telefono_contacto: { type: string }
+                nombre_contacto: { type: string }
+                email_contacto: { type: string }
       responses:
         "200":
           description: Espacio actualizado
@@ -478,11 +588,23 @@ paths:
           multipart/form-data:
             schema:
               type: object
-              required: [nombre]
+              required: [nombre_ponente, email]
               properties:
-                nombre:
+                nombre_ponente:
                   type: string
-                  description: Nombre del ponente
+                docu_identificacion:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                sector:
+                  type: string
+                telefono:
+                  type: string
+                empresa:
+                  type: string
+                cargo:
+                  type: string
                 file:
                   type: string
                   format: binary
@@ -524,7 +646,20 @@ paths:
             schema:
               type: object
               properties:
-                nombre:
+                nombre_ponente:
+                  type: string
+                docu_identificacion:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                sector:
+                  type: string
+                telefono:
+                  type: string
+                empresa:
+                  type: string
+                cargo:
                   type: string
                 file:
                   type: string

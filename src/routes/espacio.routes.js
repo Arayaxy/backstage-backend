@@ -11,11 +11,18 @@ import {
   postEspacio,
   patchEspacio,
   deleteEspacio,
+  buscarPorCapacidad,
 } from '../controllers/espacio.controller.js';
 
 export const espacioRouter = Router();
 
 //espacioRouter.use(validarToken, validarRol('admin'));
+
+espacioRouter.get('/buscar', [
+  query('min').optional().isInt({ min: 0 }),
+  query('max').optional().isInt({ min: 0 }),
+  validate
+], buscarPorCapacidad);
 
 espacioRouter.get('/', [
   query('ciudad').optional().isString(),
