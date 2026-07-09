@@ -36,11 +36,19 @@ function clean(val) {
   return val;
 }
 
+function toBool(val) {
+  const v = clean(val).toLowerCase();
+  return v === '1' || v === 'true' || v === 'aprobado' || v === 'si';
+}
+
 async function seedTable(config) {
   const rows = readCSV(config.file);
   if (!rows.length) { console.log(`0 registros en ${config.file}, saltando`); ID_MAP[config.name] = {}; return; }
 
   const intFields = config.intFields ?? [];
+  const floatFields = config.floatFields ?? [];
+  const boolFields = config.boolFields ?? [];
+  const dateFields = config.dateFields ?? [];
   const idMap = {};
   const data = rows.map(row => {
     const entry = {};
@@ -49,8 +57,25 @@ async function seedTable(config) {
         const uuid = crypto.randomUUID();
         idMap[row[csvCol]] = uuid;
         entry[prismaField] = uuid;
+      } else if (intFields.includes(prismaField)) {
+        entry[prismaField] = parseInt(clean(row[csvCol]), 10) || 0;
+      } else if (floatFields.includes(prismaField)) {
+        entry[prismaField] = parseFloat(clean(row[csvCol])) || 0;
+      } else if (boolFields.includes(prismaField)) {
+        entry[prismaField] = toBool(row[csvCol]);
+      } else if (dateFields.includes(prismaField)) {
+        const v = clean(row[csvCol]);
+        if (!v) {
+          entry[prismaField] = new Date('2026-01-01');
+        } else if (/^\d{2}:\d{2}$/.test(v)) {
+          entry[prismaField] = new Date(`2026-01-01T${v}:00`);
+        } else if (/^\d{4}-\d{2}-\d{2}/.test(v)) {
+          entry[prismaField] = new Date(v);
+        } else {
+          entry[prismaField] = new Date('2026-01-01T00:00:00');
+        }
       } else {
-        entry[prismaField] = intFields.includes(prismaField) ? parseInt(clean(row[csvCol]), 10) || 0 : clean(row[csvCol]);
+        entry[prismaField] = clean(row[csvCol]);
       }
     }
     for (const [csvCol, { field, ref }] of Object.entries(config.fks)) {
@@ -66,51 +91,102 @@ async function seedTable(config) {
 
 const tables = [
   {
-    name: 'estado', file: 'estados.csv', model: 'estado', idField: 'id_estado',
-    map: { id_estado: 'id_estado', descripcion: 'descripcion' },
+    name: 'usuario', file: 'usuarios.csv', model: 'usuario', idField: 'id_usuario',
+    map: { id_usuario: 'id', nombre_usuario: 'nombreUsuario', rol: 'rol' },
     fks: {},
   },
   {
+    name: 'estado', file: 'estados.csv', model: 'estado', idField: 'id_estado',
+    map: { id_estado: 'id', descripcion: 'descripcion' },
+    fks: {},
+  },
+  {
+    name: 'presupuesto', file: 'presupuestos.csv', model: 'presupuesto', idField: 'id_presupuesto',
+    map: {
+      id_presupuesto: 'id', estado_presupuesto: 'estadoPresupuesto', total: 'total', fecha: 'fecha',
+      nota_ubicacion: 'notaUbicacion', precio_ubicacion: 'precioUbicacion',
+      catering: 'catering', nota_catering: 'notaCatering', precio_catering: 'precioCatering',
+      audiovisuales: 'audiovisuales', nota_audiovisuales: 'notaAudiovisuales',
+      precio_audiovisuales: 'precioAudiovisuales', otros: 'otros',
+      nota_otros: 'notaOtros', precio_otros: 'precioOtros', observaciones: 'observaciones',
+    },
+    fks: {},
+    floatFields: ['total', 'precioUbicacion', 'precioCatering', 'precioAudiovisuales', 'precioOtros'],
+    boolFields: ['estadoPresupuesto', 'catering', 'audiovisuales', 'otros'],
+    dateFields: ['fecha'],
+  },
+  {
     name: 'cliente', file: 'clientes.csv', model: 'cliente', idField: 'id_cliente',
-    map: { id_cliente: 'id_cliente', cliente: 'cliente', email: 'email', telefono: 'telefono', empresa: 'empresa', sector: 'sector', ciudad: 'ciudad' },
+    map: {
+      id_cliente: 'id', cliente: 'cliente', email: 'email', telefono: 'telefono',
+      empresa: 'empresa', sector: 'sector', ciudad: 'ciudad',
+    },
     fks: {},
   },
   {
     name: 'ponente', file: 'ponentes.csv', model: 'ponente', idField: 'id_ponente',
-    map: { id_ponente: 'id_ponente', nombre_ponente: 'nombre_ponente', doc_identificacion: 'docu_identificacion', email: 'email', sector: 'sector', telefono: 'telefono', foto_link: 'foto_link', cv_link: 'cv_link', empresa: 'empresa', cargo: 'cargo' },
+    map: {
+      id_ponente: 'id', nombre_ponente: 'nombrePonente', doc_identificacion: 'docuIdentificacion',
+      email: 'email', sector: 'sector', telefono: 'telefono',
+      foto_link: 'fotoLink', cv_link: 'cvLink', empresa: 'empresa', cargo: 'cargo',
+    },
     fks: {},
   },
   {
     name: 'espacio', file: 'espacios.csv', model: 'espacio', idField: 'id_espacio',
-    map: { id_espacio: 'id_espacio', nombre_espacio: 'nombre_espacio', ciudad: 'ciudad', direccion: 'direccion', aforo: 'aforo', nota: 'nota', telefono_contacto: 'telefono_contacto', nombre_contacto: 'nombre_contacto', email_contacto: 'email_contacto' },
+    map: {
+      id_espacio: 'id', nombre_espacio: 'nombreEspacio', ciudad: 'ciudad', direccion: 'direccion',
+      aforo: 'aforo', nota: 'nota', telefono_contacto: 'telefonoContacto',
+      nombre_contacto: 'nombreContacto', email_contacto: 'emailContacto',
+    },
     fks: {},
+    intFields: ['aforo'],
   },
   {
     name: 'sala', file: 'salas.csv', model: 'sala', idField: 'id_sala',
-    map: { id_sala: 'id_sala', nombre_sala: 'nombre_sala', tipo: 'tipo_sala', capacidad_max_sala: 'capacidad_max_sala', nota_sala: 'nota_sala' },
-    fks: { id_espacio: { field: 'espacioId', ref: 'espacio' } },
+    map: {
+      id_sala: 'id', nombre_sala: 'nombreSala', tipo: 'tipoSala',
+      capacidad_max_sala: 'capacidadMaxSala', nota_sala: 'notaSala',
+    },
+    fks: { id_espacio: { field: 'idEspacio', ref: 'espacio' } },
+    intFields: ['capacidadMaxSala'],
+  },
+  {
+    name: 'ponencia', file: 'evento_ponente.csv', model: 'ponencia', idField: 'id_evento_ponente',
+    map: {
+      id_evento_ponente: 'id', nombre_hotel: 'nombreHotel', nota_transporte: 'notaTransporte',
+      horario_ida_transporte: 'horarioIdaTransporte',
+      horario_vuelta_transporte: 'horarioVueltaTransporte',
+      localizacion_hotel: 'localizacionHotel', horario_ponencia: 'horarioPonencia',
+      checking_horario: 'checkinHorario', ponente_estado: 'ponenteEstado',
+      presentacion_link: 'presentacionLink', billete_ida_link: 'billeteIdaLink',
+      billete_vuelta_link: 'billeteVueltaLink', tipo_ponencias: 'tipoPonencia',
+    },
+    fks: { id_ponente: { field: 'idPonente', ref: 'ponente' } },
+    dateFields: ['horarioIdaTransporte', 'horarioVueltaTransporte', 'horarioPonencia', 'checkinHorario'],
   },
   {
     name: 'evento', file: 'eventos.csv', model: 'evento', idField: 'id_evento',
-    map: { id_evento: 'id_evento', nombre_evento: 'nombre_evento', ciudad: 'ciudad', lugar_confirmado: 'lugar_confirmado', fecha_inicio: 'fecha_inicio', fecha_fin: 'fecha_fin', numero_personas: 'numero_personas', tipo_evento: 'tipo_evento', nota: 'nota' },
-    fks: { id_estado: { field: 'estadoId', ref: 'estado' }, id_cliente: { field: 'clienteId', ref: 'cliente' } },
-    intFields: ['numero_personas'],
-  },
-  {
-    name: 'evento_ponente', file: 'evento_ponente.csv', model: 'eventos_ponente', idField: 'id_evento_ponente',
-    map: { id_evento_ponente: 'id_evento_ponente', nombre_hotel: 'nombre_hotel', nota_transporte: 'nota_transporte', horario_ida_transporte: 'horario_ida_transporte', horario_vuelta_transporte: 'horario_vuelta_transporte', localizacion_hotel: 'localizacion_hotel', horario_ponencia: 'horario_ponencia', checking_horario: 'checkin_horario', ponente_estado: 'ponente_estado', presentacion_link: 'presentacion_link', billete_ida_link: 'billete_ida_link', billete_vuelta_link: 'billete_vuelta_link', tipo_ponencias: 'tipo_ponencia' },
-    fks: { id_ponente: { field: 'ponenteId', ref: 'ponente' }, id_evento: { field: 'eventoId', ref: 'evento' } },
-  },
-  {
-    name: 'presupuesto', file: 'presupuestos.csv', model: 'presupuesto', idField: 'id_presupuesto',
-    map: { id_presupuesto: 'id_presupuesto', estado_presupuesto: 'estado_presupuesto', total: 'total', fecha: 'fecha', nota_ubicacion: 'nota_ubicacion', precio_ubicacion: 'precio_ubicacion', nota_catering: 'nota_catering', precio_catering: 'precio_catering', nota_audiovisuales: 'nota_audiovisuales', precio_audiovisuales: 'precio_audiovisuales', nota_otros: 'nota_otros', precio_otros: 'precio_otros', observaciones: 'observaciones' },
-    fks: { id_evento: { field: 'eventoId', ref: 'evento' } },
-    intFields: ['total', 'precio_ubicacion', 'precio_catering', 'precio_audiovisuales', 'precio_otros'],
+    map: {
+      id_evento: 'id_evento', nombre_evento: 'nombreEvento', ciudad: 'ciudad',
+      lugar_confirmado: 'lugarConfirmado', fecha_inicio: 'fechaInicio',
+      fecha_fin: 'fechaFin', numero_personas: 'numeroPersonas',
+      tipo_evento: 'tipoEvento', nota: 'nota',
+    },
+    fks: {
+      id_cliente: { field: 'idCliente', ref: 'cliente' },
+      id_estado: { field: 'idEstado', ref: 'estado' },
+      id_presupuesto: { field: 'idPresupuesto', ref: 'presupuesto' },
+      id_sala: { field: 'idSala', ref: 'sala' },
+      id_ponencia: { field: 'idPonencia', ref: 'ponencia' },
+    },
+    intFields: ['numeroPersonas'],
+    dateFields: ['fechaInicio', 'fechaFin'],
   },
 ];
 
-// Limpiar datos existentes (orden inverso respetando FKs)
-const clearOrder = ['presupuesto', 'eventos_ponente', 'evento', 'sala', 'espacio', 'ponente', 'cliente', 'estado'];
+const clearOrder = ['evento', 'ponencia', 'sala', 'espacio', 'ponente', 'cliente', 'presupuesto', 'estado', 'usuario'];
+
 for (const model of clearOrder) {
   await prisma[model].deleteMany();
 }
