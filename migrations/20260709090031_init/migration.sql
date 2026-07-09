@@ -36,7 +36,7 @@ CREATE TABLE "estados" (
 
 -- CreateTable
 CREATE TABLE "eventos" (
-    "id_evento" UUID NOT NULL,
+    "id" UUID NOT NULL,
     "nombre_evento" TEXT NOT NULL,
     "ciudad" TEXT NOT NULL,
     "lugar_confirmado" TEXT NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE "eventos" (
     "id_sala" UUID NOT NULL,
     "id_ponencia" UUID NOT NULL,
 
-    CONSTRAINT "eventos_pkey" PRIMARY KEY ("id_evento")
+    CONSTRAINT "eventos_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable

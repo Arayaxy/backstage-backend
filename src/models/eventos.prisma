@@ -1,5 +1,5 @@
 model Evento {
-  id_evento       String       @id @default(uuid(7)) @db.Uuid
+  id              String       @id @default(uuid(7)) @db.Uuid
   nombreEvento    String       @map("nombre_evento")
   ciudad          String
   lugarConfirmado String       @map("lugar_confirmado")
