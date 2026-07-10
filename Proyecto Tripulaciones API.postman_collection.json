@@ -1,0 +1,1045 @@
+{
+  "info": {
+    "_postman_id": "1f105efa-bb42-4b0a-b2a0-079966a1da96",
+    "name": "Proyecto Tripulaciones API",
+    "description": "Colección para probar los endpoints en local.\n\n## Autenticación\n1. Usa el endpoint **Login** con un token de Firebase en el header `Authorization: Bearer <firebase_token>`.\n2. El servidor responde con una cookie httpOnly con el JWT.\n3. Copia el valor de la cookie `token` de los response headers (Set-Cookie).\n4. Pégalo como valor de la variable `jwt_token` en la colección (Edit → Variables).\n5. El resto de endpoints lo usarán automáticamente en `Authorization: Bearer {{jwt_token}}`.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54622580",
+    "_collection_link": "https://go.postman.co/collection/54622580-1f105efa-bb42-4b0a-b2a0-079966a1da96?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Debug Force Error (solo dev)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/debug/force-error",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "debug",
+                "force-error"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "POST Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <firebase_token>"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Verify Session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/verify",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "verify"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Upload",
+      "item": [
+        {
+          "name": "POST subir archivo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "value": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/upload",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "upload"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Eventos",
+      "item": [
+        {
+          "name": "GET listar eventos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/eventos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "eventos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET filtrar eventos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/eventos?ciudad=Bilbao&tipoEvento=Congreso",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "eventos"
+              ],
+              "query": [
+                {
+                  "key": "ciudad",
+                  "value": "Bilbao"
+                },
+                {
+                  "key": "tipoEvento",
+                  "value": "Congreso"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET buscar evento por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/eventos/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "eventos",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST crear evento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreEvento\": \"Evento de prueba\",\n  \"ciudad\": \"Bilbao\",\n  \"lugarConfirmado\": \"Palacio Europa\",\n  \"fechaInicio\": \"2026-07-15\",\n  \"fechaFin\": \"2026-07-17\",\n  \"numeroPersonas\": 200,\n  \"tipoEvento\": \"Congreso\",\n  \"nota\": \"\",\n  \"idCliente\": \"uuid-del-cliente\",\n  \"idEstado\": \"uuid-del-estado\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/eventos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "eventos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH actualizar evento",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreEvento\": \"Evento actualizado\",\n  \"numeroPersonas\": 250\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/eventos/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "eventos",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE eliminar evento",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/eventos/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "eventos",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "GET listar clientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/clientes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET filtrar clientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/clientes?sector=Tecnologia&ciudad=Madrid",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes"
+              ],
+              "query": [
+                {
+                  "key": "sector",
+                  "value": "Tecnologia"
+                },
+                {
+                  "key": "ciudad",
+                  "value": "Madrid"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET buscar cliente por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/clientes/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST crear cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": \"Cliente de prueba\",\n  \"email\": \"cliente@test.com\",\n  \"telefono\": \"944123456\",\n  \"empresa\": \"Empresa SL\",\n  \"sector\": \"Tecnologia\",\n  \"ciudad\": \"Bilbao\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/clientes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH actualizar cliente",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": \"Cliente actualizado\",\n  \"telefono\": \"944654321\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/clientes/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE eliminar cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/clientes/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Espacios",
+      "item": [
+        {
+          "name": "GET listar espacios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/espacios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "espacios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET filtrar espacios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/espacios?ciudad=Bilbao",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "espacios"
+              ],
+              "query": [
+                {
+                  "key": "ciudad",
+                  "value": "Bilbao"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET buscar por capacidad",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/espacios/buscar?min=100&max=500",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "espacios",
+                "buscar"
+              ],
+              "query": [
+                {
+                  "key": "min",
+                  "value": "100"
+                },
+                {
+                  "key": "max",
+                  "value": "500"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET buscar espacio por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/espacios/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "espacios",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST crear espacio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreEspacio\": \"Espacio de prueba\",\n  \"ciudad\": \"Bilbao\",\n  \"direccion\": \"Calle Principal 1\",\n  \"aforo\": 500,\n  \"nota\": \"\",\n  \"telefonoContacto\": \"944123456\",\n  \"nombreContacto\": \"Contacto\",\n  \"emailContacto\": \"contacto@espacio.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/espacios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "espacios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH actualizar espacio",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreEspacio\": \"Espacio actualizado\",\n  \"aforo\": 1000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/espacios/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "espacios",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE eliminar espacio",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/espacios/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "espacios",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ponentes",
+      "item": [
+        {
+          "name": "GET listar ponentes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ponentes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ponentes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET filtrar ponentes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ponentes?sector=Tecnologia",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ponentes"
+              ],
+              "query": [
+                {
+                  "key": "sector",
+                  "value": "Tecnologia"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET buscar ponente por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ponentes/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ponentes",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST crear ponente",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "nombrePonente",
+                  "value": "Ponente de prueba",
+                  "type": "text"
+                },
+                {
+                  "key": "docuIdentificacion",
+                  "value": "12345678A",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "ponente@test.com",
+                  "type": "text"
+                },
+                {
+                  "key": "sector",
+                  "value": "Tecnologia",
+                  "type": "text"
+                },
+                {
+                  "key": "telefono",
+                  "value": "944123456",
+                  "type": "text"
+                },
+                {
+                  "key": "empresa",
+                  "value": "Empresa SL",
+                  "type": "text"
+                },
+                {
+                  "key": "cargo",
+                  "value": "Director",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "value": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/ponentes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ponentes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH actualizar ponente",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "nombrePonente",
+                  "value": "Ponente actualizado",
+                  "type": "text"
+                },
+                {
+                  "key": "cargo",
+                  "value": "Director Senior",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "value": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/ponentes/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ponentes",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE eliminar ponente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ponentes/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ponentes",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Salas",
+      "item": [
+        {
+          "name": "GET listar salas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/salas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "salas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET filtrar salas por espacio",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/salas?idEspacio=bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "salas"
+              ],
+              "query": [
+                {
+                  "key": "idEspacio",
+                  "value": "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET buscar sala por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/salas/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "salas",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST crear sala",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreSala\": \"Sala A\",\n  \"tipoSala\": \"Conferencias\",\n  \"capacidadMaxSala\": 100,\n  \"idEspacio\": \"uuid-del-espacio\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/salas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "salas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH actualizar sala",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreSala\": \"Sala A renovada\",\n  \"capacidadMaxSala\": 120\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/salas/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "salas",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE eliminar sala",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/salas/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "salas",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ponencias",
+      "item": [
+        {
+          "name": "GET listar ponencias",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ponencias",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ponencias"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET filtrar ponencias por ponente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ponencias?idPonente=bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ponencias"
+              ],
+              "query": [
+                {
+                  "key": "idPonente",
+                  "value": "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET buscar ponencia por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ponencias/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ponencias",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST crear ponencia",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreHotel\": \"Hotel Centro\",\n  \"localizacionHotel\": \"Calle Mayor 1\",\n  \"horarioPonencia\": \"2026-07-15T10:00:00.000Z\",\n  \"ponenteEstado\": \"Confirmado\",\n  \"tipoPonencia\": \"Charla\",\n  \"idPonente\": \"uuid-del-ponente\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ponencias",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ponencias"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH actualizar ponencia",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ponenteEstado\": \"Pendiente\",\n  \"horarioPonencia\": \"2026-07-15T12:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ponencias/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ponencias",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE eliminar ponencia",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ponencias/bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ponencias",
+                "bdfe40ca-70e8-4fe6-8907-df4a5a7bd3e6"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "jwt_token",
+      "value": ""
+    }
+  ]
+}
