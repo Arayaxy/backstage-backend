@@ -1,30 +1,49 @@
-import jwt from 'jsonwebtoken'
-import { env } from '../config/env.js'
+import jwt from 'jsonwebtoken';
+import { env } from '../config/env.js';
 import { getAuth } from 'firebase-admin/auth';
 
 export const getLogin = async (req, res) => {
 
   const authHeader = req.headers.authorization;
-  const firebaseToken = authHeader && authHeader.split(' ')[1];
+  const firebaseToken = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
 
   if (!firebaseToken) {
     return res.status(400).json({ ok: false, message: 'No Token Encontrado' });
   }
 
+
   try {
+    let userPayload;
+    // DEVELOPMENT MOCK MODE
+    if (env.mode === 'development' && firebaseToken === 'admin-test-token') {
+      userPayload = {
+        userId: "testId",
+        name: "Tester Admin",
+        email: "tester@admin.com",
+        role: 'admin'
+      };
+    } else {
+      //PRODUCTION MODE
+      const decodedFirebaseToken = await getAuth().verifyIdToken(firebaseToken);
+      const { uid: userId, name, email } = decodedFirebaseToken;
 
-    const decodedFirebaseToken = await getAuth().verifyIdToken(firebaseToken);
-    const { uid: userId, name, email } = decodedFirebaseToken;
-
-    const userPayload = { userId, name, email, role: 'admin' };
+      userPayload = { userId, name, email, role: 'admin' };
+    }
 
     const token = jwt.sign(userPayload, env.jwtSecret, { expiresIn: '7d' });
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: false,
+      secure: env.mode === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000 //7 dias
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
+    res.cookie('is_logged_in', 'true', {
+      httpOnly: false,
+      secure: env.nodeEnv === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
     return res.json({
@@ -33,26 +52,23 @@ export const getLogin = async (req, res) => {
     });
 
   } catch (error) {
-    console.log(error);
+    console.error('Login Error Context:', error);
 
     return res.status(401).json({
       ok: false,
-      message: 'El token no es valido'
+      message: 'El token no es valido o ha expirado'
     });
-
   }
-}
+};
 
 export const verifySession = async (req, res) => {
-
-  const token = req.cookies.token;
+  const token = req.cookies?.token;
 
   if (!token) {
     return res.status(401).json({ ok: false, message: 'No esta logeado' });
   }
 
   try {
-
     const decoded = jwt.verify(token, env.jwtSecret);
 
     return res.json({
@@ -65,10 +81,11 @@ export const verifySession = async (req, res) => {
   }
 };
 
+
 export const getLogout = async (req, res) => {
-
   res.clearCookie('token');
-
+  res.clearCookie('is_logged_in');
+  
   return res.json({
     ok: true,
     message: 'Session Cerrada!'
