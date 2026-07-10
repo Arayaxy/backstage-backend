@@ -1,101 +1,55 @@
-import prisma from '../lib/prisma.js';
+import {
+  findClientes,
+  findClienteById,
+  createCliente,
+  updateCliente,
+  deleteCliente,
+} from '../services/cliente.service.js';
+import { mapPrismaError } from '../lib/prismaErrors.js';
 
 export const getClientes = async (req, res, next) => {
   try {
     const { sector, ciudad } = req.query;
+    const where = {};
+    if (sector) where.sector = { contains: sector, mode: 'insensitive' };
+    if (ciudad) where.ciudad = { contains: ciudad, mode: 'insensitive' };
 
-    let clientes;
-    if (sector || ciudad) {
-      const conditions = [];
-      const params = [];
-      if (sector) { conditions.push(`c.sector ILIKE $${params.length + 1}`); params.push(`%${sector}%`); }
-      if (ciudad) { conditions.push(`c.ciudad ILIKE $${params.length + 1}`); params.push(`%${ciudad}%`); }
-      clientes = await prisma.$queryRawUnsafe(
-        `SELECT c.* FROM clientes c WHERE ${conditions.join(' AND ')}`,
-        ...params
-      );
-    } else {
-      clientes = await prisma.cliente.findMany();
-    }
-
-    res.status(200).json({ ok: true, data: clientes });
-  } catch (error) {
-    next(error);
-  }
+    const clientes = await findClientes({
+      where: Object.keys(where).length ? where : undefined,
+    });
+    res.json({ ok: true, data: clientes, meta: { total: clientes.length } });
+  } catch (err) { next(err); }
 };
 
 export const getCliente = async (req, res, next) => {
   try {
-    const cliente = await prisma.cliente.findUnique({ where: { id: req.params.id } });
-
-    if (!cliente)
-      return res.status(404).json({ ok: false, message: 'Cliente no encontrado', error: [{ type: 'not_found', title: 'Cliente no encontrado', detail: 'No existe un cliente con ese ID' }] });
-
-    res.status(200).json({ ok: true, data: cliente });
-  } catch (error) {
-    next(error);
-  }
+    const cliente = await findClienteById(req.params.id, { includeEventos: true });
+    if (!cliente) {
+      const err = new Error('Cliente no encontrado');
+      err.status = 404;
+      return next(err);
+    }
+    res.json({ ok: true, data: cliente });
+  } catch (err) { next(err); }
 };
 
 export const postCliente = async (req, res, next) => {
   try {
-    const { cliente, email, telefono, empresa, sector, ciudad } = req.body;
-
-    const nuevo = await prisma.cliente.create({
-      data: {
-        cliente, email,
-        telefono: telefono || '',
-        empresa: empresa || '',
-        sector: sector || '',
-        ciudad: ciudad || '',
-      },
-    });
-
-    res.status(201).json({ ok: true, data: nuevo });
-  } catch (error) {
-    if (error.code === 'P2002')
-      return res.status(409).json({ ok: false, message: 'El email ya está registrado', error: [{ type: 'unique_violation', title: 'Email duplicado', detail: 'El email proporcionado ya está en uso' }] });
-    next(error);
-  }
+    const cliente = await createCliente(req.body);
+    res.status(201).json({ ok: true, data: cliente });
+  } catch (err) { next(mapPrismaError(err)); }
 };
 
 export const patchCliente = async (req, res, next) => {
   try {
-    const { cliente, email, telefono, empresa, sector, ciudad } = req.body;
-
-    const exists = await prisma.cliente.findUnique({ where: { id: req.params.id } });
-    if (!exists)
-      return res.status(404).json({ ok: false, message: 'Cliente no encontrado', error: [{ type: 'not_found', title: 'Cliente no encontrado', detail: 'No existe un cliente con ese ID' }] });
-
-    const actualizado = await prisma.cliente.update({
-      where: { id: req.params.id },
-      data: {
-        cliente, email,
-        telefono: telefono || '',
-        empresa: empresa || '',
-        sector: sector || '',
-        ciudad: ciudad || '',
-      },
-    });
-
-    res.status(200).json({ ok: true, data: actualizado });
-  } catch (error) {
-    if (error.code === 'P2002')
-      return res.status(409).json({ ok: false, message: 'El email ya está registrado', error: [{ type: 'unique_violation', title: 'Email duplicado', detail: 'El email proporcionado ya está en uso' }] });
-    next(error);
-  }
+    const cliente = await updateCliente(req.params.id, req.body);
+    res.json({ ok: true, data: cliente });
+  } catch (err) { next(mapPrismaError(err)); }
 };
 
 export const deleteCliente = async (req, res, next) => {
   try {
-    const exists = await prisma.cliente.findUnique({ where: { id: req.params.id } });
-    if (!exists)
-      return res.status(404).json({ ok: false, message: 'Cliente no encontrado', error: [{ type: 'not_found', title: 'Cliente no encontrado', detail: 'No existe un cliente con ese ID' }] });
-
-    await prisma.cliente.delete({ where: { id: req.params.id } });
-
-    res.status(200).json({ ok: true, message: 'Cliente eliminado correctamente' });
-  } catch (error) {
-    next(error);
-  }
+    const deleted = await deleteCliente(req.params.id);
+    res.json({ ok: true, data: deleted, message: 'Cliente eliminado' });
+  } catch (err) { next(mapPrismaError(err)); }
 };

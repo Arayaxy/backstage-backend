@@ -1,41 +1,39 @@
 import prisma from '../lib/prisma.js';
 
-export const findEventos = ({ includeCliente = false } = {}) => {
+export const findEventos = ({ includeCliente = false, includeEstado = false, includeSala = false, includePresupuesto = false, includePonencias = false, where } = {}) => {
   return prisma.evento.findMany({
-    include: includeCliente ? { cliente: true } : undefined,
+    where,
+    include: {
+      ...(includeCliente && { cliente: true }),
+      ...(includeEstado && { estado: true }),
+      ...(includeSala && { sala: true }),
+      ...(includePresupuesto && { presupuesto: true }),
+      ...(includePonencias && { ponencias: true }),
+    },
   });
 };
 
-export const findEventoById = (id, { includeCliente = false } = {}) => {
+export const findEventoById = (id, { includeCliente = false, includeEstado = false, includeSala = false, includePresupuesto = false, includePonencias = false } = {}) => {
   return prisma.evento.findUnique({
     where: { id },
-    include: includeCliente ? { cliente: true } : undefined,
+    include: {
+      ...(includeCliente && { cliente: true }),
+      ...(includeEstado && { estado: true }),
+      ...(includeSala && { sala: true }),
+      ...(includePresupuesto && { presupuesto: true }),
+      ...(includePonencias && { ponencias: true }),
+    },
   });
 };
 
 export const createEvento = (data) => {
-  return prisma.evento.create({
-    data: {
-      nombre: data.nombre,
-      descripcion: data.descripcion,
-      completado: data.completado,
-      clienteId: data.clienteId,
-    },
-  });
+  return prisma.evento.create({ data });
 };
 
 export const updateEvento = (id, data) => {
-  return prisma.evento.update({
-    where: { id },
-    data: {
-      ...(data.nombre !== undefined && { nombre: data.nombre }),
-      ...(data.descripcion !== undefined && { descripcion: data.descripcion }),
-      ...(data.completado !== undefined && { completado: data.completado }),
-      ...(data.clienteId !== undefined && { clienteId: data.clienteId }),
-    },
-  });
+  return prisma.evento.update({ where: { id }, data });
 };
 
-export const removeEvento = (id) => {
+export const deleteEvento = (id) => {
   return prisma.evento.delete({ where: { id } });
 };

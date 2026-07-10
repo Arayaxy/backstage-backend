@@ -1,59 +1,48 @@
-import prisma from '../lib/prisma.js';
+import {
+  findUsuarios,
+  findUsuarioById,
+  createUsuario,
+  updateUsuario,
+  deleteUsuario,
+} from '../services/usuario.service.js';
+import { mapPrismaError } from '../lib/prismaErrors.js';
 
-export const getUsuarios = async (req, res, next) => {
+export const getUsuarios = async (_req, res, next) => {
   try {
-    const usuarios = await prisma.usuario.findMany();
-    res.status(200).json({ ok: true, data: usuarios });
-  } catch (error) {
-    next(error);
-  }
+    const usuarios = await findUsuarios();
+    res.json({ ok: true, data: usuarios, meta: { total: usuarios.length } });
+  } catch (err) { next(err); }
 };
 
 export const getUsuario = async (req, res, next) => {
   try {
-    const usuario = await prisma.usuario.findUnique({ where: { id: req.params.id } });
-    if (!usuario)
-      return res.status(404).json({ ok: false, message: 'Usuario no encontrado', error: [{ type: 'not_found', title: 'Usuario no encontrado', detail: 'No existe un usuario con ese ID' }] });
-    res.status(200).json({ ok: true, data: usuario });
-  } catch (error) {
-    next(error);
-  }
+    const usuario = await findUsuarioById(req.params.id);
+    if (!usuario) {
+      const err = new Error('Usuario no encontrado');
+      err.status = 404;
+      return next(err);
+    }
+    res.json({ ok: true, data: usuario });
+  } catch (err) { next(err); }
 };
 
 export const postUsuario = async (req, res, next) => {
   try {
-    const nuevo = await prisma.usuario.create({ data: { nombreUsuario: req.body.nombreUsuario, rol: req.body.rol } });
-    res.status(201).json({ ok: true, data: nuevo });
-  } catch (error) {
-    next(error);
-  }
+    const usuario = await createUsuario(req.body);
+    res.status(201).json({ ok: true, data: usuario });
+  } catch (err) { next(mapPrismaError(err)); }
 };
 
 export const patchUsuario = async (req, res, next) => {
   try {
-    const exists = await prisma.usuario.findUnique({ where: { id: req.params.id } });
-    if (!exists)
-      return res.status(404).json({ ok: false, message: 'Usuario no encontrado', error: [{ type: 'not_found', title: 'Usuario no encontrado', detail: 'No existe un usuario con ese ID' }] });
-
-    const data = {};
-    if (req.body.nombreUsuario !== undefined) data.nombreUsuario = req.body.nombreUsuario;
-    if (req.body.rol !== undefined) data.rol = req.body.rol;
-
-    const actualizado = await prisma.usuario.update({ where: { id: req.params.id }, data });
-    res.status(200).json({ ok: true, data: actualizado });
-  } catch (error) {
-    next(error);
-  }
+    const usuario = await updateUsuario(req.params.id, req.body);
+    res.json({ ok: true, data: usuario });
+  } catch (err) { next(mapPrismaError(err)); }
 };
 
 export const deleteUsuario = async (req, res, next) => {
   try {
-    const exists = await prisma.usuario.findUnique({ where: { id: req.params.id } });
-    if (!exists)
-      return res.status(404).json({ ok: false, message: 'Usuario no encontrado', error: [{ type: 'not_found', title: 'Usuario no encontrado', detail: 'No existe un usuario con ese ID' }] });
-    await prisma.usuario.delete({ where: { id: req.params.id } });
-    res.status(200).json({ ok: true, message: 'Usuario eliminado correctamente' });
-  } catch (error) {
-    next(error);
-  }
+    const deleted = await deleteUsuario(req.params.id);
+    res.json({ ok: true, data: deleted, message: 'Usuario eliminado' });
+  } catch (err) { next(mapPrismaError(err)); }
 };
