@@ -1,7 +1,7 @@
 node_modules
 .env
 
-/src/generated/prisma
+/src/generated
 # De momento metemos migrations a gitignore, al menos hasta que tengamos un esquemas más estable
 #/migrations
 
