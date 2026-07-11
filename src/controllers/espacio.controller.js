@@ -3,7 +3,7 @@ import {
   findEspacioById,
   createEspacio,
   updateEspacio,
-  deleteEspacio,
+  removeEspacio,
   findEspaciosByCapacidad,
 } from '../services/espacio.service.js';
 import { mapPrismaError } from '../lib/prismaErrors.js';
@@ -50,7 +50,7 @@ export const patchEspacio = async (req, res, next) => {
 
 export const deleteEspacio = async (req, res, next) => {
   try {
-    const deleted = await deleteEspacio(req.params.id);
+    const deleted = await removeEspacio(req.params.id);
     res.json({ ok: true, data: deleted, message: 'Espacio eliminado' });
   } catch (err) { next(mapPrismaError(err)); }
 };

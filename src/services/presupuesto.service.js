@@ -22,6 +22,6 @@ export const updatePresupuesto = (id, data) => {
   return prisma.presupuesto.update({ where: { id }, data });
 };
 
-export const deletePresupuesto = (id) => {
+export const removePresupuesto = (id) => {
   return prisma.presupuesto.delete({ where: { id } });
 };

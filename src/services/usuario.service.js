@@ -16,6 +16,6 @@ export const updateUsuario = (id, data) => {
   return prisma.usuario.update({ where: { id }, data });
 };
 
-export const deleteUsuario = (id) => {
+export const removeUsuario = (id) => {
   return prisma.usuario.delete({ where: { id } });
 };

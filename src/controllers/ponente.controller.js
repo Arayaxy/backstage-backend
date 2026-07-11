@@ -3,7 +3,7 @@ import {
   findPonenteById,
   createPonente,
   updatePonente,
-  deletePonente,
+  removePonente,
 } from '../services/ponente.service.js';
 import { mapPrismaError } from '../lib/prismaErrors.js';
 
@@ -72,7 +72,7 @@ export const patchPonente = async (req, res, next) => {
 
 export const deletePonente = async (req, res, next) => {
   try {
-    const deleted = await deletePonente(req.params.id);
+    const deleted = await removePonente(req.params.id);
     res.json({ ok: true, data: deleted, message: 'Ponente eliminado' });
   } catch (err) { next(mapPrismaError(err)); }
 };

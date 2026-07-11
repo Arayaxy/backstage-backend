@@ -22,6 +22,6 @@ export const updateEstado = (id, data) => {
   return prisma.estado.update({ where: { id }, data });
 };
 
-export const deleteEstado = (id) => {
+export const removeEstado = (id) => {
   return prisma.estado.delete({ where: { id } });
 };

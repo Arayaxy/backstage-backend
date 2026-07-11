@@ -22,6 +22,6 @@ export const updatePonente = (id, data) => {
   return prisma.ponente.update({ where: { id }, data });
 };
 
-export const deletePonente = (id) => {
+export const removePonente = (id) => {
   return prisma.ponente.delete({ where: { id } });
 };

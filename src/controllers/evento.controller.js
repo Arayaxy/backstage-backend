@@ -3,7 +3,7 @@ import {
   findEventoById,
   createEvento,
   updateEvento,
-  deleteEvento,
+  removeEvento,
 } from '../services/evento.service.js';
 import { mapPrismaError } from '../lib/prismaErrors.js';
 
@@ -83,7 +83,7 @@ export const patchEvento = async (req, res, next) => {
 
 export const deleteEvento = async (req, res, next) => {
   try {
-    const deleted = await deleteEvento(req.params.id);
+    const deleted = await removeEvento(req.params.id);
     res.json({ ok: true, data: deleted, message: 'Evento eliminado' });
   } catch (err) { next(mapPrismaError(err)); }
 };

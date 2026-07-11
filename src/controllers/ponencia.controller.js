@@ -3,7 +3,7 @@ import {
   findPonenciaById,
   createPonencia,
   updatePonencia,
-  deletePonencia,
+  removePonencia,
 } from '../services/ponencia.service.js';
 import { mapPrismaError } from '../lib/prismaErrors.js';
 
@@ -51,7 +51,7 @@ export const patchPonencia = async (req, res, next) => {
 
 export const deletePonencia = async (req, res, next) => {
   try {
-    const deleted = await deletePonencia(req.params.id);
+    const deleted = await removePonencia(req.params.id);
     res.json({ ok: true, data: deleted, message: 'Ponencia eliminada' });
   } catch (err) { next(mapPrismaError(err)); }
 };

@@ -3,7 +3,7 @@ import {
   findUsuarioById,
   createUsuario,
   updateUsuario,
-  deleteUsuario,
+  removeUsuario,
 } from '../services/usuario.service.js';
 import { mapPrismaError } from '../lib/prismaErrors.js';
 
@@ -42,7 +42,7 @@ export const patchUsuario = async (req, res, next) => {
 
 export const deleteUsuario = async (req, res, next) => {
   try {
-    const deleted = await deleteUsuario(req.params.id);
+    const deleted = await removeUsuario(req.params.id);
     res.json({ ok: true, data: deleted, message: 'Usuario eliminado' });
   } catch (err) { next(mapPrismaError(err)); }
 };

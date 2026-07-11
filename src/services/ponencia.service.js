@@ -28,6 +28,6 @@ export const updatePonencia = (id, data) => {
   return prisma.ponencia.update({ where: { id }, data });
 };
 
-export const deletePonencia = (id) => {
+export const removePonencia = (id) => {
   return prisma.ponencia.delete({ where: { id } });
 };

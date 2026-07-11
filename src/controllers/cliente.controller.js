@@ -3,7 +3,7 @@ import {
   findClienteById,
   createCliente,
   updateCliente,
-  deleteCliente,
+  removeCliente,
 } from '../services/cliente.service.js';
 import { mapPrismaError } from '../lib/prismaErrors.js';
 
@@ -48,7 +48,7 @@ export const patchCliente = async (req, res, next) => {
 
 export const deleteCliente = async (req, res, next) => {
   try {
-    const deleted = await deleteCliente(req.params.id);
+    const deleted = await removeCliente(req.params.id);
     res.json({ ok: true, data: deleted, message: 'Cliente eliminado' });
   } catch (err) { next(mapPrismaError(err)); }
 };

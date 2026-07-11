@@ -3,7 +3,7 @@ import {
   findSalaById,
   createSala,
   updateSala,
-  deleteSala,
+  removeSala,
 } from '../services/sala.service.js';
 import { mapPrismaError } from '../lib/prismaErrors.js';
 
@@ -47,7 +47,7 @@ export const patchSala = async (req, res, next) => {
 
 export const deleteSala = async (req, res, next) => {
   try {
-    const deleted = await deleteSala(req.params.id);
+    const deleted = await removeSala(req.params.id);
     res.json({ ok: true, data: deleted, message: 'Sala eliminada' });
   } catch (err) { next(mapPrismaError(err)); }
 };

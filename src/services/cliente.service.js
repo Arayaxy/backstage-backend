@@ -22,6 +22,6 @@ export const updateCliente = (id, data) => {
   return prisma.cliente.update({ where: { id }, data });
 };
 
-export const deleteCliente = (id) => {
+export const removeCliente = (id) => {
   return prisma.cliente.delete({ where: { id } });
 };

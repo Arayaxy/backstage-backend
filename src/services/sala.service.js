@@ -28,6 +28,6 @@ export const updateSala = (id, data) => {
   return prisma.sala.update({ where: { id }, data });
 };
 
-export const deleteSala = (id) => {
+export const removeSala = (id) => {
   return prisma.sala.delete({ where: { id } });
 };

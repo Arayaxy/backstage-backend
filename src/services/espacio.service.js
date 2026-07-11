@@ -22,7 +22,7 @@ export const updateEspacio = (id, data) => {
   return prisma.espacio.update({ where: { id }, data });
 };
 
-export const deleteEspacio = (id) => {
+export const removeEspacio = (id) => {
   return prisma.espacio.delete({ where: { id } });
 };
 

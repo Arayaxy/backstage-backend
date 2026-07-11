@@ -3,7 +3,7 @@ import {
   findEstadoById,
   createEstado,
   updateEstado,
-  deleteEstado,
+  removeEstado,
 } from '../services/estado.service.js';
 import { mapPrismaError } from '../lib/prismaErrors.js';
 
@@ -42,7 +42,7 @@ export const patchEstado = async (req, res, next) => {
 
 export const deleteEstado = async (req, res, next) => {
   try {
-    const deleted = await deleteEstado(req.params.id);
+    const deleted = await removeEstado(req.params.id);
     res.json({ ok: true, data: deleted, message: 'Estado eliminado' });
   } catch (err) { next(mapPrismaError(err)); }
 };

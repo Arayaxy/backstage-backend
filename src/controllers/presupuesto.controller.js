@@ -3,7 +3,7 @@ import {
   findPresupuestoById,
   createPresupuesto,
   updatePresupuesto,
-  deletePresupuesto,
+  removePresupuesto,
 } from '../services/presupuesto.service.js';
 import { mapPrismaError } from '../lib/prismaErrors.js';
 
@@ -51,7 +51,7 @@ export const patchPresupuesto = async (req, res, next) => {
 
 export const deletePresupuesto = async (req, res, next) => {
   try {
-    const deleted = await deletePresupuesto(req.params.id);
+    const deleted = await removePresupuesto(req.params.id);
     res.json({ ok: true, data: deleted, message: 'Presupuesto eliminado' });
   } catch (err) { next(mapPrismaError(err)); }
 };

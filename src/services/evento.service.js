@@ -34,6 +34,6 @@ export const updateEvento = (id, data) => {
   return prisma.evento.update({ where: { id }, data });
 };
 
-export const deleteEvento = (id) => {
+export const removeEvento = (id) => {
   return prisma.evento.delete({ where: { id } });
 };
