@@ -180,7 +180,6 @@ const tables = [
       id_estado: { field: 'idEstado', ref: 'estado' },
       id_presupuesto: { field: 'idPresupuesto', ref: 'presupuesto' },
       id_sala: { field: 'idSala', ref: 'sala' },
-      id_ponencia: { field: 'idPonencia', ref: 'ponencia' },
     },
     intFields: ['numeroPersonas'],
     dateFields: ['fechaInicio', 'fechaFin'],
