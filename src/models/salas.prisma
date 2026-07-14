@@ -6,7 +6,7 @@ model Sala {
   notaSala         String?  @map("nota_sala")
   eventos          Evento[]
   idEspacio        String   @map("id_espacio") @db.Uuid
-  espacio          Espacio  @relation(fields: [idEspacio], references: [id]) // Enlace de clave foránea
+  espacio          Espacio  @relation(fields: [idEspacio], references: [id], onDelete: Cascade) // Enlace de clave foránea
 
   @@map("salas")
 }

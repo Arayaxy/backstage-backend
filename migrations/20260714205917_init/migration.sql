@@ -161,4 +161,4 @@ ALTER TABLE "ponencias" ADD CONSTRAINT "ponencias_id_evento_fkey" FOREIGN KEY ("
 ALTER TABLE "ponencias" ADD CONSTRAINT "ponencias_id_ponente_fkey" FOREIGN KEY ("id_ponente") REFERENCES "ponentes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "salas" ADD CONSTRAINT "salas_id_espacio_fkey" FOREIGN KEY ("id_espacio") REFERENCES "espacios"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "salas" ADD CONSTRAINT "salas_id_espacio_fkey" FOREIGN KEY ("id_espacio") REFERENCES "espacios"("id") ON DELETE CASCADE ON UPDATE CASCADE;
