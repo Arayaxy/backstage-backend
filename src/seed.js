@@ -24,16 +24,6 @@ const seedUsuarios = rows => {
   return prisma.usuario.createMany({ data, skipDuplicates: true });
 };
 
-const seedEstados = rows => {
-  const data = rows.map(r => {
-    const id = randomUUIDv7();
-    idMap.estado ??= {};
-    idMap.estado[r.id] = id;
-    return { id, descripcion: r.descripcion };
-  });
-  return prisma.estado.createMany({ data, skipDuplicates: true });
-};
-
 const seedPresupuestos = rows => {
   const data = rows.map(r => {
     const id = randomUUIDv7();
@@ -152,9 +142,9 @@ const seedEventos = rows => {
       numeroPersonas: parseInt(r.numero_personas, 10),
       tipoEvento: r.tipo_evento,
       nota: r.nota || null,
+      estado: r.estado,
       idPresupuesto: idMap.presupuesto[r.id_presupuesto] ?? null,
       idCliente: idMap.cliente[r.id_cliente],
-      idEstado: idMap.estado[r.id_estado],
       idSala: idMap.sala[r.id_sala] ?? null,
     };
   });
@@ -184,13 +174,12 @@ const seedPonencias = rows => {
 
 const CLEAR_ORDER = [
   'ponencia', 'evento', 'sala', 'espacio', 'ponente',
-  'cliente', 'presupuesto', 'estado', 'usuario',
+  'cliente', 'presupuesto', 'usuario',
 ];
 
 const main = async () => {
   console.log('📂 Leyendo CSVs...');
   const usuarios = readCSV('usuarios.csv');
-  const estados = readCSV('estados.csv');
   const presupuestos = readCSV('presupuestos.csv');
   const clientes = readCSV('clientes.csv');
   const ponentes = readCSV('ponentes.csv');
@@ -207,8 +196,6 @@ const main = async () => {
   console.log('🌱 Sembrando datos...\n');
   await seedUsuarios(usuarios);
   console.log(`  ✅ usuarios (${usuarios.length})`);
-  await seedEstados(estados);
-  console.log(`  ✅ estados (${estados.length})`);
   await seedPresupuestos(presupuestos);
   console.log(`  ✅ presupuestos (${presupuestos.length})`);
   await seedClientes(clientes);

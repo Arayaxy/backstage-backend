@@ -1,7 +1,0 @@
-model Estado {
-  id          String   @id @default(uuid(7)) @db.Uuid
-  descripcion String
-  eventos     Evento[]
-
-  @@map("estados")
-}

@@ -6,6 +6,5 @@ export { eventoRouter } from './evento.routes.js';
 export { ponenteRouter } from './ponente.routes.js';
 export { salaRouter } from './sala.routes.js';
 export { ponenciaRouter } from './ponencia.routes.js';
-export { estadoRouter } from './estado.routes.js';
 export { usuarioRouter } from './usuario.routes.js';
 export { presupuestoRouter } from './presupuesto.routes.js';

@@ -9,18 +9,17 @@ import { mapPrismaError } from '../lib/prismaErrors.js';
 
 export const getEventos = async (req, res, next) => {
   try {
-    const { ciudad, tipoEvento, idEstado } = req.query;
+    const { ciudad, tipoEvento, estado } = req.query;
 
     const eventos = await findEventos({
       includeCliente: true,
-      includeEstado: true,
       includeSala: true,
       includePresupuesto: true,
       includePonencias: true,
       where: {
         ciudad: { contains: ciudad, mode: 'insensitive' },
         tipoEvento: { contains: tipoEvento, mode: 'insensitive' },
-        idEstado,
+        estado,
       },
     });
     res.json({ ok: true, data: eventos, meta: { total: eventos.length } });
@@ -31,7 +30,6 @@ export const getEvento = async (req, res, next) => {
   try {
     const evento = await findEventoById(req.params.id, {
       includeCliente: true,
-      includeEstado: true,
       includeSala: true,
       includePresupuesto: true,
       includePonencias: true,

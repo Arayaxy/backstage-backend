@@ -84,12 +84,13 @@ export const createEventoValidation = checkSchema({
       errorMessage: 'El id del cliente no es un UUID válido',
     },
   },
-  idEstado: {
+  estado: {
     notEmpty: {
-      errorMessage: 'El id del estado es obligatorio',
+      errorMessage: 'El estado del evento es obligatorio',
     },
-    isUUID: {
-      errorMessage: 'El id del estado no es un UUID válido',
+    isIn: {
+      options: [['planificado', 'reservado', 'confirmado', 'finalizado', 'cancelado']],
+      errorMessage: 'El estado no es válido',
     },
   },
 }, ['body']);
@@ -156,10 +157,11 @@ export const updateEventoValidation = checkSchema({
       errorMessage: 'El id del cliente no es un UUID válido',
     },
   },
-  idEstado: {
+  estado: {
     optional: true,
-    isUUID: {
-      errorMessage: 'El id del estado no es un UUID válido',
+    isIn: {
+      options: [['planificado', 'reservado', 'confirmado', 'finalizado', 'cancelado']],
+      errorMessage: 'El estado no es válido',
     },
   },
 }, ['body']);
