@@ -36,7 +36,7 @@ export const getLogin = async (req, res) => {
       httpOnly: true,
       secure: env.mode === 'production',
       sameSite: env.mode === 'production' ? 'none' : 'lax',
-      partitioned: true,
+      partitioned: env.mode === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
