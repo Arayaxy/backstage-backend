@@ -8,3 +8,4 @@ export { salaRouter } from './sala.routes.js';
 export { ponenciaRouter } from './ponencia.routes.js';
 export { usuarioRouter } from './usuario.routes.js';
 export { presupuestoRouter } from './presupuesto.routes.js';
+export { solicitudEdicionRouter } from './solicitudEdicion.routes.js';

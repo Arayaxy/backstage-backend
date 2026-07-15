@@ -1,5 +1,8 @@
 -- CreateEnum
-CREATE TYPE "estado" AS ENUM ('Planificado', 'Reservado', 'Confirmado', 'Finalizado', 'Cancelado');
+CREATE TYPE "estado_evento" AS ENUM ('Planificado', 'Reservado', 'Confirmado', 'Finalizado', 'Cancelado');
+
+-- CreateEnum
+CREATE TYPE "estado_edicion" AS ENUM ('Pendiente', 'Aprobada', 'Rechazada');
 
 -- CreateTable
 CREATE TABLE "clientes" (
@@ -40,7 +43,7 @@ CREATE TABLE "eventos" (
     "numero_personas" INTEGER NOT NULL,
     "tipo_evento" TEXT NOT NULL,
     "nota" TEXT,
-    "estado" "estado" NOT NULL,
+    "estado" "estado_evento" NOT NULL,
     "id_presupuesto" UUID,
     "id_cliente" UUID NOT NULL,
     "id_sala" UUID,
@@ -120,10 +123,24 @@ CREATE TABLE "salas" (
 );
 
 -- CreateTable
+CREATE TABLE "solicitudes_edicion" (
+    "id" UUID NOT NULL,
+    "id_ponencia" UUID NOT NULL,
+    "campo" TEXT NOT NULL,
+    "valor_solicitado" TEXT NOT NULL,
+    "mensaje" TEXT,
+    "estado" "estado_edicion" NOT NULL DEFAULT 'Pendiente',
+    "fecha_solicitud" TIMESTAMPTZ(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "solicitudes_edicion_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "usuarios" (
     "id" UUID NOT NULL,
     "nombre_usuario" TEXT NOT NULL,
     "rol" TEXT NOT NULL,
+    "email" TEXT,
 
     CONSTRAINT "usuarios_pkey" PRIMARY KEY ("id")
 );
@@ -154,3 +171,6 @@ ALTER TABLE "ponencias" ADD CONSTRAINT "ponencias_id_ponente_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "salas" ADD CONSTRAINT "salas_id_espacio_fkey" FOREIGN KEY ("id_espacio") REFERENCES "espacios"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "solicitudes_edicion" ADD CONSTRAINT "solicitudes_edicion_id_ponencia_fkey" FOREIGN KEY ("id_ponencia") REFERENCES "ponencias"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

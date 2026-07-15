@@ -1,7 +1,8 @@
 model Usuario {
-  id            String @id @default(uuid(7)) @db.Uuid
-  nombreUsuario String @map("nombre_usuario")
+  id            String  @id @default(uuid(7)) @db.Uuid
+  nombreUsuario String  @map("nombre_usuario")
   rol           String
+  email         String?
 
   @@map("usuarios")
 }

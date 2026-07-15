@@ -1,0 +1,20 @@
+enum EstadoSolicitudEdicion {
+  Pendiente
+  Aprobada
+  Rechazada
+
+  @@map("estado_edicion")
+}
+
+model SolicitudEdicion {
+  id              String                 @id @default(uuid(7)) @db.Uuid
+  idPonencia      String                 @map("id_ponencia") @db.Uuid
+  campo           String
+  valorSolicitado String                 @map("valor_solicitado")
+  mensaje         String?
+  estado          EstadoSolicitudEdicion @default(Pendiente)
+  fechaSolicitud  DateTime               @default(now()) @map("fecha_solicitud") @db.Timestamptz(0)
+  ponencia        Ponencia               @relation(fields: [idPonencia], references: [id])
+
+  @@map("solicitudes_edicion")
+}

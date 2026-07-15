@@ -5,7 +5,7 @@ enum Estado {
   Finalizado
   Cancelado
 
-  @@map("estado")
+  @@map("estado_evento")
 }
 
 model Evento {
