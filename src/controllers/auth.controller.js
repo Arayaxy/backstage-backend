@@ -51,14 +51,8 @@ export const getLogin = async (req, res) => {
     res.cookie('token', token, {
       httpOnly: true,
       secure: env.mode === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
-
-    res.cookie('is_logged_in', 'true', {
-      httpOnly: false,
-      secure: env.mode === 'production',
-      sameSite: 'lax',
+      sameSite: env.mode === 'production' ? 'none' : 'lax',
+      partitioned: env.mode === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
@@ -238,7 +232,6 @@ export const verifySession = async (req, res) => {
 
 export const getLogout = async (req, res) => {
   res.clearCookie('token');
-  res.clearCookie('is_logged_in');
 
   return res.json({
     ok: true,

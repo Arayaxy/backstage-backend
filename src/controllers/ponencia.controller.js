@@ -49,6 +49,34 @@ export const patchPonencia = async (req, res, next) => {
   } catch (err) { next(mapPrismaError(err)); }
 };
 
+const updatePonenciaFile = async (req, res, next, fieldName) => {
+  try {
+    if (!req.file?.path) {
+      const err = new Error('No se ha recibido ningun archivo');
+      err.status = 400;
+      return next(err);
+    }
+
+    const ponencia = await updatePonencia(req.params.id, {
+      [fieldName]: req.file.path,
+    });
+
+    res.json({ ok: true, data: ponencia });
+  } catch (err) { next(mapPrismaError(err)); }
+};
+
+export const uploadPonenciaPresentacion = (req, res, next) => {
+  return updatePonenciaFile(req, res, next, 'presentacionLink');
+};
+
+export const uploadPonenciaBilleteIda = (req, res, next) => {
+  return updatePonenciaFile(req, res, next, 'billeteIdaLink');
+};
+
+export const uploadPonenciaBilleteVuelta = (req, res, next) => {
+  return updatePonenciaFile(req, res, next, 'billeteVueltaLink');
+};
+
 export const deletePonencia = async (req, res, next) => {
   try {
     const deleted = await removePonencia(req.params.id);
